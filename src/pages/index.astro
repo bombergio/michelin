@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Card from '../components/Card.astro'
+import CardUpcoming from '../components/CardUpcoming.astro'
+import Stats from '../components/Stats.astro'
+import { listPlaces } from '../../utils/airtable'
+import countBy from 'lodash/countBy'
+import type { Place, Fields } from '../components/common/Types'
+
+const places: Place[] = await listPlaces()
+const notVisitedPlaces: Place[] = await listPlaces(false)
+const allStarsArray = places.map(r => r.fields.Stars)
+const groupByStars = countBy(allStarsArray, Math.floor)
+---
+<Layout title="Our Michelin-starred restaurant journey">
+	<main>
+		<h1 class="text-center text-4xl sm:text-6xl xl:mt-20">Michelin-starred restaurants we have visited so far</h1>
+    <div class="row">
+      <Stats oneStarCount={groupByStars['1']} twoStarCount={groupByStars['2']} threeStarCount={groupByStars['3']}/>
+    </div>
+    <div class="row divide-y-2 divide-red-accent-300">
+      <div class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10 mb-6">
+        <a href="/statistics" class="inline-flex items-center self-center text-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none">
+          Some fancy statistics
+        </a>
+      </div>
+      <div class="text-center">
+        <h2 class="my-5 text-3xl font-bold">Upcoming bookings</h2>
+        {notVisitedPlaces.map((place: { fields: Fields }) => {
+          return <CardUpcoming place={place.fields}/>
+        })}
+      </div>
+      <div>
+        {places.reverse().map((place: { fields: Fields }) => {
+          return <Card place={place.fields}/>
+        })}
+      </div>
+  </div> 
+	</main>
+</Layout>
+
+
+<style>
+	h1 {
+		margin: 2rem 0;
+	}
+
+	main {
+		margin: auto;
+		padding: 1em;
+		max-width: 120ch;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			background-position-y: 0%;
+		}
+		50% {
+			background-position-y: 80%;
+		}
+	}
+</style>

@@ -1,0 +1,29 @@
+{
+  "name": "@example/basics",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "devDependencies": {
+    "@astrojs/react": "^1.1.0",
+    "@astrojs/tailwind": "^1.0.0",
+    "@types/google-map-react": "^2.1.7",
+    "@types/lodash": "^4.14.184",
+    "@types/react": "^18.0.10",
+    "@types/react-dom": "^18.0.6",
+    "astro": "^1.0.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "google-map-react": "^2.2.0",
+    "lightgallery": "^2.6.0",
+    "lodash": "^4.17.21",
+    "victory": "^36.6.6"
+  }
+}
