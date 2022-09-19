@@ -27,7 +27,7 @@ export function Swiper ({ photos, licenseKey}:Props) {
   return (
     <>
       <LightGallery
-        speed={0}
+        speed={500}
         download={false}
         elementClassNames="grid grid-cols-2 gap-5"
         licenseKey={licenseKey}
