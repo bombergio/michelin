@@ -25,6 +25,6 @@
     "lightgallery": "^2.6.1",
     "lodash": "^4.17.21",
     "tailwindcss": "^3.1.8",
-    "victory": "^36.6.7"
+    "victory": "^36.6.8"
   }
 }
