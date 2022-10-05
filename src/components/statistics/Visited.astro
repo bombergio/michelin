@@ -1,0 +1,64 @@
+---
+import oneStar from '../images/oneStar.svg'
+import twoStars from '../images/twoStars.svg'
+import threeStars from '../images/threeStars.svg'
+import { ChartDataBy, chartData } from '../../components/statistics/ChartData'
+import { counting, group } from 'radash'
+import { michelinStats } from '../../../utils/michelin-stats'
+import type { Place, Fields } from '../../components/common/Types'
+import { starsToImg } from '../../components/Card.astro'
+
+export interface Props {
+  places: Array<Place>
+}
+
+interface StarsByCountry {
+  [key: string]: Stars
+}
+
+interface Stars {
+  '1'?: number
+  '2'?: number
+  '3'?: number
+}
+
+interface CountryAndStars {
+  country: string
+  stars: string
+}
+
+const { places } = Astro.props
+const dataByCountry: chartData[] = ChartDataBy({places: places, fieldKey: 'Country'})
+const allRestaurants: Array<StarsByCountry> = await michelinStats(dataByCountry.map((c) => c.x))
+
+const keys_to_keep: (keyof Fields)[] = ['Country', 'Stars']
+const byCountryList: Array<CountryAndStars> = places.map(element => Object.assign({}, ...keys_to_keep.map(key => ({[key.toLowerCase()]: String(element.fields[key])}))))
+const visited: Array<StarsByCountry> = Object.entries(group(byCountryList, g => g.country)).map(([x, y]) => {return {[x]: counting(y, r => r.stars)}})
+
+function findByKeyName(keyName: string, objArr: Array<StarsByCountry>, stars: keyof Stars): number {
+  const countryObj = objArr.find(x => Object.keys(x)[0] === keyName)
+  if (countryObj === undefined) {
+    throw new TypeError("Can't find country, but it should be there")
+  }
+  const starsObj = Object.entries(countryObj)[0][1]
+  return starsObj[stars] || 0
+}
+---
+{allRestaurants.map((restaurants) => {
+  const country = Object.keys(restaurants)[0]
+  function block(stars: keyof Stars): any {
+    return restaurants[country][stars] || 0 > 0 ? 
+      <div class="grid justify-items-center items-center">
+        <img src={starsToImg(+stars)} alt="Michelin star" class="inline object-center h-8 mb-1"/>
+        <div class="mb-4">{findByKeyName(country, visited, stars) || '0'} / {restaurants[country][stars]}</div>
+      </div> : ''
+  }
+  return (
+    <div class="grid justify-items-center items-start">
+      <h3 class="text-2xl pb-3">{country}</h3>
+      <>{block('3')}</>
+      <>{block('2')}</>
+      <>{block('1')}</>
+    </div>
+  )
+})}

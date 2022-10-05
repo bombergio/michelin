@@ -12,7 +12,7 @@ export interface Props {
 
 const { place } = Astro.props
 
-function starsToImg(stars: number) {
+export function starsToImg(stars: number) {
   switch (stars) {
     case 1:
       return oneStar

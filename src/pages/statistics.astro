@@ -4,8 +4,8 @@ import { listPlaces } from '../../utils/airtable'
 import Map from '../components/statistics/Map'
 import type { Place } from '../components/common/Types'
 import PieChart from '../components/statistics/PieChart'
-import { ChartDataBy } from '../components/statistics/ChartData'
-import { chartData, GroupChartDataByYear } from '../components/statistics/ChartData'
+import { ChartDataBy, chartData, GroupChartDataByYear } from '../components/statistics/ChartData'
+import Visited from '../components/statistics/Visited.astro'
 
 const places: Place[] = await listPlaces()
 const countOfStars: number = sum(places.map(r => r.fields.Stars))
@@ -17,10 +17,10 @@ const dataByGoogleRating: chartData[] = ChartDataBy({places: places, fieldKey: '
 const dataByYear: chartData[] = ChartDataBy({places: places, elementsArray: places.map(r => r.fields.Date.split('-')[0])})
 const dataStarsByYear: chartData[] = GroupChartDataByYear(places)
 
+
 function sum(arr: number[]): number {
   return arr.reduce((a: number, b: number) => a + b, 0)
 }
-
 ---
 <Layout title="Some statistics on our foodie journeys">
 	<main>
@@ -74,6 +74,12 @@ function sum(arr: number[]): number {
           <div class="text-center md:mt-10">
             <h2>Restaurants by Google rating</h2>
             <PieChart data={dataByGoogleRating}/>
+          </div>
+        </div>
+        <div class="px-4 mx-auto">
+          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Progress by country</h2>
+          <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-4">
+            <Visited places={places}/>
           </div>
         </div>
       </div>
