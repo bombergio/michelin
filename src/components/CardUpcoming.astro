@@ -3,24 +3,13 @@ import oneStar from '../images/oneStar.svg'
 import twoStars from '../images/twoStars.svg'
 import threeStars from '../images/threeStars.svg'
 import type { Fields } from '../components/common/Types'
+import { starsToImg } from '../components/Card.astro'
 
 export interface Props {
   place: Fields
 }
 
 const { place } = Astro.props
-
-function starsToImg(stars: number) {
-  switch (stars) {
-    case 1:
-      return oneStar
-    case 2:
-      return twoStars
-    case 3:
-      return threeStars
-  }
-}
-
 ---
 <div class="px-4 py-8 mx-auto">
   <div class="grid">

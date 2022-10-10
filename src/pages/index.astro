@@ -24,12 +24,14 @@ const groupByStars = countBy(allStarsArray, Math.floor)
           Some fancy statistics
         </a>
       </div>
-      <div class="text-center">
-        <h2 class="my-5 text-3xl font-bold">Upcoming bookings</h2>
-        {notVisitedPlaces.map((place: { fields: Fields }) => {
-          return <CardUpcoming place={place.fields}/>
-        })}
-      </div>
+      {notVisitedPlaces.length > 0 &&
+        <div class="text-center">
+          <h2 class="my-5 text-3xl font-bold">Upcoming bookings</h2>
+          {notVisitedPlaces.map((place: { fields: Fields }) => {
+            return <CardUpcoming place={place.fields}/>
+          })}
+        </div>
+      }
       <div>
         {places.reverse().map((place: { fields: Fields }) => {
           return <Card place={place.fields}/>
