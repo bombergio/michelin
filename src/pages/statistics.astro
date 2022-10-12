@@ -37,15 +37,15 @@ function sum(arr: number[]): number {
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{totalSpentPerPerson} €</h6>
+              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{totalSpentPerPerson}</h6>
               <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
-                Spent per person
+                Spent per person in €
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{totalSpentPerPerson * 2} €</h6>
+              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{totalSpentPerPerson * 2}</h6>
               <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
-                Family spendings
+                Spent for both in €
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
@@ -77,7 +77,7 @@ function sum(arr: number[]): number {
             <PieChart data={dataByGoogleRating}/>
           </div>
         </div>
-        <div class="px-4 mx-auto">
+        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
           <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Progress by country</h2>
           <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-4">
             <Visited places={places}/>
@@ -86,7 +86,7 @@ function sum(arr: number[]): number {
       </div>
       <div class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10 mb-6">
         <a href="/" class="inline-flex items-center self-center text-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none">
-          Back to start page
+          Back to the main page
         </a>
       </div>
     </div>

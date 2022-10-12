@@ -3,6 +3,7 @@ import type { Place } from '../common/Types'
 import oneStar from '../../images/oneStar.svg'
 import twoStars from '../../images/twoStars.svg'
 import threeStars from '../../images/threeStars.svg'
+import slug from 'slug'
 
 export default function Map({places}: {places: Place[]}){
   const lons: number[] = places.map(r => r.fields.Lon)
@@ -26,9 +27,10 @@ export default function Map({places}: {places: Place[]}){
 
   const getInfoWindowString = (place: Place) => `
     <div>
-      <div style="font-size: 20px;">
-        ${place.fields.Name}
+      <div style="font-size: 20px; padding-top: 10px; text-decoration: underline;">
+        <a href="/#${slug(place.fields.Name)}">${place.fields.Name}</a>
       </div>
+      </br>
       <div>
         <img src=${icons[place.fields.Stars].icon} alt="Michelin stars" style="height: 20px;"/>
       </div>

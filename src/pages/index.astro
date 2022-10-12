@@ -49,6 +49,15 @@ const groupByStars = countBy(allStarsArray, Math.floor)
 		margin: 2rem 0;
 	}
 
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+  }
+
 	main {
 		margin: auto;
 		padding: 1em;

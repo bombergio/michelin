@@ -2,15 +2,56 @@
 import oneStar from '../images/oneStar.svg'
 import twoStars from '../images/twoStars.svg'
 import threeStars from '../images/threeStars.svg'
+import badgeOutstanding from '../images/badgeOutstanding.svg'
 import Valuation from '../components/Valuation.astro'
 import { Swiper } from '../components/Swiper'
 import type { Fields } from '../components/common/Types'
+import slug from 'slug'
 
 export interface Props {
   place: Fields
 }
 
 const { place } = Astro.props
+
+const numberToCategory = (number : Number) : Number => {
+  switch (true) {
+    case (number < 50):
+      return 50
+    case (number < 100):
+      return 100
+    case (number < 200):
+      return 200
+    case (number < 500):
+      return 500
+    default:
+      return 1000
+  }
+}
+
+const outstandingBadge = `
+  <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="w-7 h-7">
+    <filter id="filter1" x="0" y="0" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <path id="Path" fill="#aab3be" fill-rule="evenodd" stroke="none" filter="url(#filter1)" d="M 300 150 C 300 67.157288 232.842712 0 150 0 C 67.157288 0 0 67.157288 0 150 C 0 232.842712 67.157288 300 150 300 C 232.842712 300 300 232.842712 300 150 Z"/>
+    <text id="Top" xml:space="preserve">
+      <tspan x="160" y="100" text-anchor="middle" font-family="Montserrat" font-size="60" font-weight="600" fill="#000000" xml:space="preserve">Out-</tspan>
+      <tspan x="160" y="200" text-anchor="middle" font-family="Montserrat" font-size="60" font-weight="600" fill="#000000" xml:space="preserve">standing</tspan>
+    </text>
+  </svg>`
+
+const topBadge = (topNumber : Number) => `
+  <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="w-7 h-7 ml-2">
+    <filter id="filter1" x="0" y="0" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <path id="Path" fill="#e2cb93" fill-rule="evenodd" stroke="none" filter="url(#filter1)" d="M 300 150 C 300 67.157288 232.842712 0 150 0 C 67.157288 0 0 67.157288 0 150 C 0 232.842712 67.157288 300 150 300 C 232.842712 300 300 232.842712 300 150 Z"/>
+    <text id="Top" xml:space="preserve">
+      <tspan x="168" y="120" text-anchor="middle" font-family="Montserrat" font-size="96" font-weight="700" fill="#000000" xml:space="preserve">Top</tspan>
+      <tspan x="168" y="244.5" text-anchor="middle" font-family="Montserrat" font-size="96" font-weight="700" fill="#000000" xml:space="preserve">${topNumber}</tspan>
+    </text>
+  </svg>`
 
 export function starsToImg(stars: number) {
   switch (stars) {
@@ -23,6 +64,20 @@ export function starsToImg(stars: number) {
   }
 }
 
+const laListe = (rating: string) => {
+  switch(true) {
+    case (place.LaListeRating === 'outstanding'): {
+      return `${outstandingBadge}`
+    }
+    case (Number(place.LaListeRating) > 0): {
+      return `<div class="flex">${place.LaListeRating}${topBadge(numberToCategory(Number(place.LaListeRating)))}</div>`
+    }
+    default: {
+      return rating
+    }
+  }
+}
+
 const { LIGHTGALLERY_LICENSE_KEY } = import.meta.env
 ---
 <div class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
@@ -30,7 +85,19 @@ const { LIGHTGALLERY_LICENSE_KEY } = import.meta.env
     <div class="flex flex-col justify-top">
       <div class="max-w-xl mb-3">
         <h2 class="max-w-lg mb-2 sm:mb-4 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
-          {place.Name}
+          <span id={slug(place.Name)} class="container">
+            {place.Name}
+            <a aria-label={place.Name} href={'#'+slug(place.Name)}>
+              <span class="anchor-link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 astro-icon">
+                  <path 
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+              </span>
+            </a>
+          </span>
         </h2>
         <img src={starsToImg(place.Stars)} alt="Michelin star" class="inline object-center h-8 mb-3"/>
         <p class="text-base text-gray-700 md:text-lg">
@@ -54,12 +121,32 @@ const { LIGHTGALLERY_LICENSE_KEY } = import.meta.env
       <div class="grid sm:gap-2 sm:grid-cols-1 sm:space-y-0 border-l-4 border-red-accent-300">
         <ul class="space-y-3">
           <li class="flex ml-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-2 0 29 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+              <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+            </svg>
+            <div class="ml-2">
+              {Number(place.GoogleRating).toFixed(1)}
+            </div>
+          </li>
+          {place.LaListeRating ?
+          <>
+            <li class="flex ml-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 76 140" stroke-width="2" stroke="currentColor" class="w-6 h-8">
+                <path fill="#1a1919" fill-rule="evenodd" d="M185 140c-2 0-4-1-4-3v-8h-2v-2h2v-2l2-1v3h4v2h-4v7l2 2h2v2h-2m13 0v-8c0-2-1-3-3-3l-2 1-1 2v8h-2v-20h2v9l4-2c3 0 4 1 4 4v9h-2Zm11-12c-3 0-4 2-4 4h7c0-2-1-4-3-4m5 5h-9v1c0 2 2 4 5 4l3-1 1 2-5 1c-4 0-6-3-6-7 0-3 2-6 6-6 3 0 5 2 5 5v1m21 7h-2l-2-8-1-2v2l-3 8h-2l-3-13h3l1 7v3h1v-3l2-7h2l2 8 1 2 1-3 1-7h2l-3 13Zm11-11c-3 0-4 2-4 4s1 5 3 5c3 0 4-3 4-5s-1-4-3-4m-1 11c-3 0-5-3-5-7 0-3 2-6 6-6s5 3 5 6c0 4-2 7-6 7m15-13h1l-1 2h-1l-2 1v10h-3v-11h-1v-2h1c1 0 2 0 2 2l4-2m6 10v1h1v1l-1 1c-2 0-3-1-3-3v-17h3v17Zm11-7-2-2c-3 0-4 2-4 5 0 2 1 5 3 5l3-2v-6Zm-3 10c-3 0-5-3-5-7 0-3 2-6 5-6l3 1v-8h3v18h1v1l-1 1-3-2-3 2Zm11-14h-2l2-4-1-2h3v1l-2 5m6 14-3-1v-2l3 1c2 0 3-1 3-2l-3-2c-2-1-3-2-3-4s2-3 4-3l4 1-1 1h-3l-2 1 2 2c3 1 4 2 4 4s-2 4-5 4m20-11-2 1-1 1v5l2 2c3 0 4-2 4-5 0-2-1-4-3-4m0 11-3-1h-2v-19h2v9c1-2 2-3 4-3 3 0 4 3 4 7 0 3-1 7-5 7m13-12c-2 0-3 2-3 3h6c0-1-1-3-3-3m6 5h-9v1c0 2 2 4 4 4l4-1v2l-4 1c-4 0-6-3-6-7 0-3 1-7 5-7s6 3 6 6v1m5 7-4-1 1-2 3 1 3-2-3-2c-2-1-3-2-3-4s1-4 4-4l4 2-1 1-3-1c-2 0-2 1-2 2l2 2c2 1 4 2 4 4s-2 4-5 4m12 0c-3 0-4-1-4-4v-7h-2v-2h2v-3h2v3h4v2h-4v7l2 2 2-1v2l-2 1m17-14 1 1-1 2h-1l-2 1v9h-3v-9l-1-1v-2h1c1 0 2 0 2 2l4-3m7 2c-2 0-3 2-3 3h6c0-1-1-3-3-3m5 5h-8v1c0 2 1 4 4 4l3-1 1 1-4 2c-4 0-7-3-7-7 0-3 2-7 6-7s5 3 5 6v1m6 7-4-1 1-2 3 1 2-2-3-2c-2-1-3-2-3-4s2-4 5-4l3 1-1 2-2-1c-2 0-3 1-3 2l3 2c2 1 3 2 3 4s-2 4-4 4m11 0c-2 0-3-1-3-4v-7h-3v-2h3v-3h2v3h4v2h-4v7l2 2 2-1v2l-3 1m12-6h-2c-1 0-4 0-4 2 0 1 1 2 3 2l2-1 1-2v-1Zm2 6c-2 0-2-1-2-2l-4 2c-2 0-4-2-4-4 0-3 4-4 6-4h2v-1c0-2-1-3-3-3s-3 1-3 2l-1-2 4-2c3 0 5 1 5 5v6l1 1v1l-1 1Zm8 0c-2 0-4-2-4-5v-8h2v8c0 1 1 2 3 2l2-1 1-1v-8h2v9l1 2v-1l1 2h-2c-1 0-2 0-2-2-1 2-2 3-4 3m16-14 1 1-1 2h-1l-2 1v9h-3v-11l-1 1v-2h1c1 0 2 0 2 2 1-2 2-3 4-3m9 8h-1c-2 0-4 0-4 2l2 2 3-1v-3Zm2 5-2-1-4 2c-2 0-3-2-3-4 0-3 3-4 6-4h1v-1c0-2-1-3-3-3l-3 2-1-2 5-2c2 0 4 1 4 5v6l1 1 1-1v2h-2Zm13 0v-8c0-2-1-3-3-3l-2 2-1 1v8h-2v-12h2v2c1-2 2-3 4-3 3 0 4 2 4 5v8h-2Zm10 1c-2 0-3-2-3-4l-1-7h-2v-2h3v-3l2-1v4h4v2h-4v7l2 2 1-1 1 2-3 1m-466 1h78v-4H-1ZM24 9v108H3V3l21 6Zm25 0v108H28V9l10-3 11 3Zm24-6v114H53L52 9l21-6Zm4-4h-3L51 5 38 2h-1L25 6 2-1h-3v122h78V-1Zm396 140-4-1 1-2c1 1 2 2 3 1l2-1-2-2c-3-1-4-2-4-4s2-4 5-4l3 1-1 2-2-1c-2 0-3 1-3 2l3 2c2 0 4 1 4 4 0 2-2 3-5 3m62-39a2 2 0 0 1-2-2l2-2 2 2a2 2 0 0 1-2 2m-8-4c-6 0-10-5-10-11 0-3 1-6 3-7l2 2c-2 1-3 3-3 6 0 4 4 6 8 6s7-2 7-6c0-3-1-5-3-6l2-3c3 2 4 5 4 9 0 5-4 10-10 10m0-20c-6 0-10-5-10-11 0-5 4-10 10-10s10 5 10 10c0 6-4 11-10 11m0-18c-4 0-8 3-8 7s4 7 8 7 7-2 7-7c0-4-3-7-7-7m-11-6 11-10-11-10h20v3h-12l8 7-8 7h12v3Zm-393-3h-4v47h47v-4h-42Zm152-16h-5v63h47v-4h-42Zm-63 41h-26l13-33 13 33Zm-12-42h-2l-25 64h5l7-18h28l8 18h4l-25-64Zm129 64h4V50h-4Zm46-34-5-3c-8-3-12-6-12-12s5-10 12-10c6-1 10 2 13 6v1l4-2-1-1c-4-6-9-9-16-9-9 1-16 6-16 15 0 8 5 12 14 16l5 3c10 4 13 8 13 14 0 8-6 12-15 12-7 0-13-3-17-10v-1l-4 3h1c4 8 11 13 20 12 12 0 19-6 19-16 0-9-5-13-15-18m21-26h20v43h4V36h38v-4h-62Zm73 55V66h29v-4h-29V36h32v-4h-37v63h38v-4Z"/>
               </svg>
+              <div class="ml-2">
+                <Fragment set:html={laListe(place.LaListeRating)} />
+              </div>
+            </li>
+          </> : null
+          }
+          <li class="flex ml-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+            </svg>
             <div class="ml-2">
               {place.Date}
             </div>
@@ -106,3 +193,18 @@ const { LIGHTGALLERY_LICENSE_KEY } = import.meta.env
     </div>
   </div>
 </div>
+
+<style lang="css">
+  .anchor-link {
+    visibility: hidden;
+  }
+
+  .astro-icon {
+    display: inline;
+    vertical-align: middle;
+  }
+
+  .container:focus .anchor-link, .container:hover .anchor-link {
+    visibility: visible;
+  }
+</style>

@@ -21,6 +21,7 @@ export interface Fields {
   Lat: number
   Lon: number
   GoogleRating: number
+  LaListeRating: string
   FullAddress: string
   Visited: boolean
 }
