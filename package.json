@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "astro-seo": "^0.6.0",
     "google-map-react": "^2.2.0",
     "lightgallery": "^2.6.1",
     "lodash": "^4.17.21",
