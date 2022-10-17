@@ -15,13 +15,15 @@ const { place } = Astro.props
 
 const numberToCategory = (number : Number) : Number => {
   switch (true) {
-    case (number < 50):
+    case (number <= 10):
+      return 10
+    case (number <= 50):
       return 50
-    case (number < 100):
+    case (number <= 100):
       return 100
-    case (number < 200):
+    case (number <= 200):
       return 200
-    case (number < 500):
+    case (number <= 500):
       return 500
     default:
       return 1000
