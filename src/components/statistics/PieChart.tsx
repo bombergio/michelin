@@ -1,5 +1,5 @@
 import { VictoryPie, VictoryTheme } from 'victory'
-import merge from 'lodash/merge'
+import { merge } from 'radash'
 
 const graphSettings = {
   innerRadius: 70,

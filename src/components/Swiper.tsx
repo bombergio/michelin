@@ -5,10 +5,11 @@ import type { Photo } from './common/Types'
 
 interface Props {
   photos: Photo[]
-  licenseKey: string
 }
 
-export function Swiper ({ photos, licenseKey}:Props) {
+export function Swiper ({ photos}:Props) {
+  const { PUBLIC_LIGHTGALLERY_LICENSE_KEY } = import.meta.env
+
   function renderClass(i: number) {
     if (i === 0) {return 'object-cover w-full rounded shadow-lg h-56 col-span-2 cursor-pointer duration-500 hover:scale-105 lazy'} else
     if (i < 3) {return 'object-cover w-full rounded shadow-lg h-48 cursor-pointer duration-500 hover:scale-105 lazy'} else 
@@ -29,7 +30,7 @@ export function Swiper ({ photos, licenseKey}:Props) {
         speed={500}
         download={false}
         elementClassNames="grid grid-cols-2 gap-5"
-        licenseKey={licenseKey}
+        licenseKey={{ key: PUBLIC_LIGHTGALLERY_LICENSE_KEY }}
       >
         {getItems()}
       </LightGallery>

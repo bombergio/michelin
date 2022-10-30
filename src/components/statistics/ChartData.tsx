@@ -1,5 +1,5 @@
 import type { Place, Fields } from '../common/Types'
-import countBy from 'lodash/countBy'
+import { counting } from 'radash'
 
 export interface chartDataParams {
   places: Place[]
@@ -15,8 +15,8 @@ export interface chartData {
 export function ChartDataBy({places, fieldKey, elementsArray}: chartDataParams): chartData[] {
   return Array.from(
     Object.entries(
-      countBy(elementsArray ? elementsArray : (
-        fieldKey != undefined ? places.map(r => r.fields[fieldKey]) : []))
+      counting(elementsArray ? elementsArray : (
+        fieldKey != undefined ? places.map(r => r.fields[fieldKey]) : []), x => x)
     ).map(([ key, val ]) => ({ x: key, y: val }))
   )
 }
@@ -31,4 +31,3 @@ export function GroupChartDataByYear(places: Place[]): chartData[]{
     )
   )
 }
-

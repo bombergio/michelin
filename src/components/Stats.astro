@@ -1,29 +1,19 @@
 ---
-import oneStar from '../images/oneStar.svg';
-import twoStars from '../images/twoStars.svg';
-import threeStars from '../images/threeStars.svg';
+import { starsToIcon } from '../components/common/Helpers'
 
 export interface Props {
-  oneStarCount: number
-  twoStarCount: number
-  threeStarCount: number
+  stars: number[]
 }
 
-const { oneStarCount, twoStarCount, threeStarCount} = Astro.props
+const {stars} = Astro.props
 ---
 <div class="px-4 py-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 mb-6">
   <div class="grid grid-cols-2 row-gap-8 md:grid-cols-3">
-    <div class="text-center md:border-r mb-8 md:mb-0">
-      <h2 class="text-6xl md:text-8xl font-bold">{threeStarCount}</h2>
-      <img src={threeStars} alt="Three Michelin stars" class="inline object-center h-8 md:h-10"/>
+    {stars.map((item, index) => (
+      <div class="text-center md:border-r mb-8 md:mb-0">
+        <h2 class="text-6xl md:text-8xl font-bold">{item}</h2>
+      <img src={starsToIcon(index + 1)} alt="X Michelin stars" class="inline object-center h-8 md:h-10"/>
     </div>
-    <div class="text-center md:border-r mb-8 md:mb-0">
-      <h6 class="text-6xl md:text-8xl font-bold">{twoStarCount}</h6>
-      <img src={twoStars} alt="Two Michelin stars" class="inline object-center h-8 md:h-10"/>
-    </div>
-    <div class="text-center md:border-r col-span-2 md:col-span-1">
-      <h6 class="text-6xl md:text-8xl font-bold">{oneStarCount}</h6>
-      <img src={oneStar} alt="One Michelin star" class="inline object-center h-8 md:h-10"/>
-    </div>
+    ))}
   </div>
 </div>

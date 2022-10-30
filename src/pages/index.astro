@@ -18,7 +18,7 @@ const groupByStars = countBy(allStarsArray, Math.floor)
 	<main>
 		<h1 class="text-center text-4xl sm:text-6xl xl:mt-20">Michelin-starred restaurants we have visited so far</h1>
     <div class="row">
-      <Stats oneStarCount={groupByStars['1']} twoStarCount={groupByStars['2']} threeStarCount={groupByStars['3']}/>
+      <Stats stars={[groupByStars['1'], groupByStars['2'], groupByStars['3']]}/>
     </div>
     <div class="row divide-y-2 divide-red-accent-300">
       <div class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10 mb-6">
