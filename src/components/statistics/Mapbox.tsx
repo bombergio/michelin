@@ -1,4 +1,3 @@
-// import 'mapbox-gl/dist/mapbox-gl.css'
 import mapboxgl from 'mapbox-gl'
 import type { Place } from '../common/Types'
 import { useEffect } from 'react'
