@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import { listPlaces } from '../../utils/airtable'
-import Map from '../components/statistics/Map'
+import Mapbox from '../components/statistics/Mapbox'
 import type { Place } from '../components/common/Types'
 import PieChart from '../components/statistics/PieChart'
 import { ChartDataBy, chartData, GroupChartDataByYear } from '../components/statistics/ChartData'
@@ -56,9 +56,8 @@ function sum(arr: number[]): number {
             </div>
           </div>
         </div>
-        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl py-10 md:px-24 lg:px-8 lg:py-10">
-          <Map places={places} client:visible/>
-        </div>
+        <div id="map" class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl h-64 md:h-[38rem]"></div>
+        <Mapbox places={places} client:only="react"/>
         <div class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2">
           <div class="text-center">
             <h2>Restaurants by country</h2>
