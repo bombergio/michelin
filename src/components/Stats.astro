@@ -7,7 +7,7 @@ export interface Props {
 
 const {stars} = Astro.props
 ---
-<div class="px-4 py-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 mb-6">
+<div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl px-4 md:px-24 lg:px-8 py-4 lg:pt-20 mb-6">
   <div class="grid grid-cols-2 row-gap-8 md:grid-cols-3">
     {stars.map((item, index) => (
       <div class="text-center md:border-r mb-8 md:mb-0">

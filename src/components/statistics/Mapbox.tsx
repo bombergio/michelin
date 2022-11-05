@@ -1,7 +1,7 @@
-import 'mapbox-gl/dist/mapbox-gl.css'
+// import 'mapbox-gl/dist/mapbox-gl.css'
 import mapboxgl from 'mapbox-gl'
 import type { Place } from '../common/Types'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import slug from 'slug'
 import { starsToIcon } from '../../components/common/Helpers'
 

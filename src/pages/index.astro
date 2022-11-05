@@ -4,13 +4,13 @@ import Card from '../components/Card.astro'
 import CardUpcoming from '../components/CardUpcoming.astro'
 import Stats from '../components/Stats.astro'
 import { listPlaces } from '../../utils/airtable'
-import countBy from 'lodash/countBy'
+import { counting } from 'radash'
 import type { Place, Fields } from '../components/common/Types'
 
 const places: Place[] = await listPlaces()
 const notVisitedPlaces: Place[] = await listPlaces(false)
 const allStarsArray = places.map(r => r.fields.Stars)
-const groupByStars = countBy(allStarsArray, Math.floor)
+const groupByStars = counting(allStarsArray, Math.floor)
 ---
 <Layout title="Our Michelin-starred restaurant journey" 
   description="A list of the best restaurants in various countries we have visited and rated. \
