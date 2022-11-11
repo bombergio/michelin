@@ -34,19 +34,23 @@ function sum(arr: number[]): number {
             <div class="text-center px-3 mb-5 md:mb-0">
               <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{countOfStars}</h6>
               <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
-                Total stars
+                Star
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{totalSpentPerPerson}</h6>
+              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">
+                {totalSpentPerPerson} <small class="text-4xl">€</small>
+              </h6>
               <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
-                Spent per person in €
+                Spent per person
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{totalSpentPerPerson * 2}</h6>
+              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">
+                {Math.round(totalSpentPerPerson * 2 / countOfVisitedRestaurants)} <small class="text-4xl">€</small>
+              </h6>
               <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
-                Spent for both in €
+                Average bill per restaurant
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
@@ -79,7 +83,7 @@ function sum(arr: number[]): number {
         </div>
         <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
           <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Progress by country</h2>
-          <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-4">
+          <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly">
             <Visited places={places}/>
           </div>
         </div>

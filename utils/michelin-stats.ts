@@ -1,29 +1,32 @@
-import { parse } from 'csv-parse/sync'
-import { counting } from 'radash'
-import { group } from 'radash'
+import { parse } from "csv-parse/sync"
+import { counting, group } from "radash"
+import fs from "node:fs/promises"
 
 export async function michelinStats(countries: string[]) {
-
-  const data = await fetch("https://raw.githubusercontent.com/ngshiheng/michelin-my-maps/main/data/michelin_my_maps.csv").then((response) => response.text())
+  const data = await fs.readFile("files/michelin.csv", "utf-8")
 
   const csv = parse(data, {
     columns: true,
-    skip_empty_lines: true
+    skip_empty_lines: true,
   })
 
-  const keys_to_keep = ['Address', 'Award']
+  const keys_to_keep = ["Country", "Award"]
 
   const filtered_list = csv
-    .map(element => Object.assign({}, ...keys_to_keep.map(key => ({[key]: element[key]}))))
-    .filter(el => el.Award !== "Bib Gourmand")
-    .map(key => ({ 
-      country: (key.Address.split(",").at(-1).trim()),
-      stars: (key.Award.split(" ").at(0))
+    .map((element: { [x: string]: any }) =>
+      Object.assign({}, ...keys_to_keep.map((key) => ({ [key]: element[key] })))
+    )
+    .map((key: { Country: string; Award: string }) => ({
+      country: key.Country,
+      stars: key.Award.split(" ").at(0),
     }))
-    .filter(el => countries.includes(el.country))
+    .filter((el: { country: string }) => countries.includes(el.country))
 
-  const summed_list = Object.entries(group(filtered_list, g => g.country)).map(([x, y]) => {
-    return {[x]: counting(y, r => r.stars)}
+  const summed_list = Object.entries(
+    group(filtered_list, (g: { country: string; stars: string }) => g.country)
+  ).map(([x, y]) => {
+    return { [x]: counting(y, (r: { country: string; stars: string }) => r.stars) }
   })
+
   return summed_list
 }

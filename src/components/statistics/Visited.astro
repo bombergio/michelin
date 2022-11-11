@@ -45,13 +45,13 @@ function findByKeyName(keyName: string, objArr: Array<StarsByCountry>, stars: ke
   const country = Object.keys(restaurants)[0]
   function block(stars: keyof Stars): any {
     return restaurants[country][stars] || 0 > 0 ? 
-      <div class="grid justify-items-center items-center">
-        <img src={starsToIcon(+stars)} alt="Michelin star" class="inline object-center h-8 mb-1"/>
+      <div class="flex flex-col justify-items-center items-center">
+        <img src={starsToIcon(+stars)} alt="Michelin star" class="inline object-center h-6 mb-1"/>
         <div class="mb-4">{findByKeyName(country, visited, stars) || '0'} / {restaurants[country][stars]}</div>
       </div> : ''
   }
   return (
-    <div class="grid justify-items-center items-start">
+    <div class="basis-1/2 md:basis-1/4 justify-items-center pb-5 grid">
       <h3 class="text-2xl pb-3">{country}</h3>
       <>{block('3')}</>
       <>{block('2')}</>
