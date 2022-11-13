@@ -1,17 +1,19 @@
 {
-  "name": "@example/basics",
-  "version": "0.0.1",
+  "name": "@bombergio/michelin",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "playwright test"
   },
   "devDependencies": {
     "@astrojs/react": "^1.1.4",
     "@astrojs/tailwind": "^2.0.2",
+    "@playwright/test": "^1.27.1",
     "@types/mapbox-gl": "^2.7.7",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.21",
@@ -19,6 +21,7 @@
     "@types/slug": "^5.0.3",
     "astro": "^1.6.3",
     "csv-parse": "^5.3.0",
+    "dotenv": "^16.0.3",
     "radash": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
