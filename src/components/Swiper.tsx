@@ -18,9 +18,10 @@ export function Swiper ({ photos}:Props) {
 
   const getItems = useCallback(() => {
     return photos.map((item, index) => {
-        return (
-          <img className={renderClass(index)} src={index < 3 ? item.thumbnails.large.url : ""} alt={item.filename} data-src={item.url} key={item.id} loading="lazy"/>
-        );
+      const filename=item.filename.replaceAll(" ", "_")
+      return (
+        <img className={renderClass(index)} src={index < 3 ? "https://ik.imagekit.io/bomberg/tr:n-large_thumb/" + filename : ""} alt={filename} data-src={"https://ik.imagekit.io/bomberg/" + filename} key={item.id} loading="lazy"/>
+      );
     });
   }, [photos]);
 
@@ -37,3 +38,4 @@ export function Swiper ({ photos}:Props) {
     </>
   )
 }
+
