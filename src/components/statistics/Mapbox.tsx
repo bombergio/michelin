@@ -19,6 +19,12 @@ export default function Mapbox({places}: {places: Place[]}){
 
     map.scrollZoom.disable()
 
+    const mq = window.matchMedia("(min-width: 420px)")
+
+    if (mq.matches){
+      map.addControl(new mapboxgl.NavigationControl())
+    }
+
     places.forEach((place: Place) => {
       const popup = new mapboxgl.Popup({
         closeButton: false,
