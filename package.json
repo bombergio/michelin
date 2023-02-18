@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "playwright test"
+    "test": "playwright test",
+    "upgrade": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
     "@astrojs/react": "^2.0.0",
