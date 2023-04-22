@@ -1,5 +1,4 @@
 import { VictoryPie, VictoryTheme } from 'victory'
-import { merge } from 'radash'
 
 const graphSettings = {
   innerRadius: 70,
@@ -34,14 +33,14 @@ export default function PieChart(data: any) {
       <VictoryPie
         innerRadius={graphSettings.innerRadius}
         radius={graphSettings.radius}
-        style={merge(graphSettings.style, { labels: { fontSize: 10 }})}
+        style={graphSettings.style}
         data={data.data}
-        labelRadius={55}
         theme={graphSettings.theme}
         padAngle={graphSettings.padAngle}
         labels={({ datum }) => `${datum.y}`}
         standalone={false}
         origin={{ x: 150, y: 100 }}
+        labelRadius={52}
         colorScale={colors}
       />
     </svg>

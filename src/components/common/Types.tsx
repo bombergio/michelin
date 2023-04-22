@@ -42,3 +42,14 @@ export interface Thumbnails {
 export interface Thumbnail {
   url: string
 }
+
+export interface TableFields {
+  key: React.Key,
+  name: string,
+  stars: number,
+  googleRating: number,
+  country: string,
+  year: string
+  food: number,
+  winePairing: number,
+}

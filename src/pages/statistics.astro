@@ -2,10 +2,11 @@
 import Layout from '../layouts/Layout.astro'
 import { listPlaces } from '../../utils/airtable'
 import Mapbox from '../components/statistics/Mapbox'
-import type { Place } from '../components/common/Types'
+import type { Place, TableFields } from '../components/common/Types'
 import PieChart from '../components/statistics/PieChart'
 import { ChartDataBy, chartData, GroupChartDataByYear } from '../components/statistics/ChartData'
 import Visited from '../components/statistics/Visited.astro'
+import DrawTable from '../components/statistics/Table'
 
 const places: Place[] = await listPlaces()
 const countOfStars: number = sum(places.map(r => r.fields.Stars))
@@ -17,6 +18,16 @@ const dataByGoogleRating: chartData[] = ChartDataBy({places: places, fieldKey: '
 const dataByYear: chartData[] = ChartDataBy({places: places, elementsArray: places.map(r => r.fields.Date.split('-')[0])})
 const dataStarsByYear: chartData[] = GroupChartDataByYear(places)
 
+const dataTable: TableFields[] = places.map((place, index) => ({
+  key: index + 1,
+  name: place.fields.Name,
+  stars: place.fields.Stars,
+  googleRating: place.fields.GoogleRating,
+  country: place.fields.Country,
+  year: place.fields.Date.split('-')[0],
+  food: place.fields.Food,
+  winePairing: place.fields.WinePairing,
+}));
 
 function sum(arr: number[]): number {
   return arr.reduce((a: number, b: number) => a + b, 0)
@@ -25,8 +36,8 @@ function sum(arr: number[]): number {
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet' />
 <Layout title="Some statistics on our foodie journeys"
   description="Statistics on our - through our foodie journeys.">
-	<main>
-		<h1 class="text-center text-4xl sm:text-6xl mt-10 xl:mt-20 px-10">Some statistics on our foodie journeys</h1>
+  <main>
+    <h1 class="text-center text-4xl sm:text-6xl mt-10 xl:mt-20 px-10">Some statistics on our foodie journeys</h1>
     <div>
       <div class="row divide-y-2 divide-red-accent-300 sm:pt-10">
         <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10">
@@ -65,26 +76,32 @@ function sum(arr: number[]): number {
         <Mapbox places={places} client:only="react"/>
         <div class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2">
           <div class="text-center">
-            <h2>Restaurants by country</h2>
+            <h2 class="text-center text-2xl">Restaurants by country</h2>
             <PieChart data={dataByCountry}/>
           </div>
           <div class="text-center">
-            <h2>Restaurants by year</h2>
+            <h2 class="text-center text-2xl">Restaurants by year</h2>
             <PieChart data={dataByYear}/>
           </div>
           <div class="text-center md:mt-10">
-            <h2>Michelin stars by year</h2>
+            <h2 class="text-center text-2xl">Michelin stars by year</h2>
             <PieChart data={dataStarsByYear}/>
           </div>
           <div class="text-center md:mt-10">
-            <h2>Restaurants by Google rating</h2>
+            <h2 class="text-center text-2xl">Restaurants by Google rating</h2>
             <PieChart data={dataByGoogleRating}/>
           </div>
         </div>
         <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
-          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Progress by country</h2>
+          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Visits by country</h2>
           <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly">
             <Visited places={places}/>
+          </div>
+        </div>
+        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
+          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Table of restaurants</h2>
+          <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly">
+            <DrawTable dataSource={dataTable} client:only="react"/>
           </div>
         </div>
       </div>
@@ -94,5 +111,13 @@ function sum(arr: number[]): number {
         </a>
       </div>
     </div>
-	</main>
+  </main>
 </Layout>
+
+<style is:global>
+  button.ant-btn-primary {
+    background-color: #651fff;
+    border-color: #651fff;
+    height: 28px !important;
+  }
+</style>

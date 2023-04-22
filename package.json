@@ -29,6 +29,7 @@
     "slug": "^8.2.2"
   },
   "dependencies": {
+    "antd": "^5.4.4",
     "astro-seo": "^0.7.2",
     "lightgallery": "^2.7.1",
     "mapbox-gl": "^2.14.1",

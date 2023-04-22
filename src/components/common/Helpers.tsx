@@ -2,7 +2,7 @@ import oneStar from '../../images/oneStar.svg'
 import twoStars from '../../images/twoStars.svg'
 import threeStars from '../../images/threeStars.svg'
 
-export function numberToCategory(number : Number) : Number {
+export function numberToCategory(number : number) : number {
   switch (true) {
     case (number <= 10):
       return 10
@@ -58,7 +58,7 @@ const outstandingBadge = `
     </text>
   </svg>`
 
-const topBadge = (topNumber : Number) => `
+const topBadge = (topNumber: number) => `
   <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="w-7 h-7 ml-2">
     <filter id="filter1" x="0" y="0" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feGaussianBlur stdDeviation="3"/>
@@ -69,3 +69,27 @@ const topBadge = (topNumber : Number) => `
       <tspan x="168" y="244.5" text-anchor="middle" font-family="Montserrat" font-size="96" font-weight="700" fill="#000000" xml:space="preserve">${topNumber}</tspan>
     </text>
   </svg>`
+
+export function valuationStar(fill: boolean, keyIndex?: number): JSX.Element {
+  const baseClassName = "w-6 h-6 stroke-red-accent-300"
+  const fillColorClassName = "fill-red-accent-300"
+  const className = fill ? `${baseClassName} ${fillColorClassName}` : baseClassName
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className={className} key={keyIndex}>
+      <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+    </svg>
+  )
+}
+
+export function valuation(stars: number) {
+  return (
+    <div className="flex">
+      {stars ? [...Array(stars)].map((_el, index) => (
+        valuationStar(true, index)
+      )) : ''}
+      {stars ? [...Array(5 - stars)].map((_el, index) => (
+        valuationStar(false, index)
+      )) : ''}
+    </div>
+  )
+}
