@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import googleIcon from '../images/google.svg'
 import calendarIcon from '../images/calendar.svg'
 import placeIcon from '../images/place.svg'
@@ -26,7 +27,7 @@ const { place } = Astro.props
             {place.Name}
             <a aria-label={place.Name} href={'#'+slug(place.Name)}>
               <span class="anchor-link">
-                <img src={anchorIcon} class="w-7 h-7 pb-1 astro-icon" alt="Anchor icon" />
+                <Image src={anchorIcon} class="w-7 h-7 pb-1 astro-icon" alt="Anchor icon" />
               </span>
             </a>
           </span>
@@ -53,7 +54,7 @@ const { place } = Astro.props
       <div class="grid sm:gap-2 sm:grid-cols-1 sm:space-y-0 border-l-4 border-red-accent-300">
         <ul class="space-y-3">
           <li class="flex ml-2">
-            <img src={googleIcon} class="w-6 h-6" alt="Google icon" />
+            <Image src={googleIcon} class="w-6 h-6" alt="Google icon" />
             <div class="ml-2">
               {Number(place.GoogleRating).toFixed(1)}
             </div>
@@ -61,7 +62,7 @@ const { place } = Astro.props
           {place.LaListeRating ?
           <>
             <li class="flex ml-2">
-              <img src={laListeIcon} class="w-6 h-6" alt="LaListe icon" />
+              <Image src={laListeIcon} class="w-6 h-6" alt="LaListe icon" />
               <div class="ml-2">
                 <Fragment set:html={laListeBadge(place.LaListeRating)} />
               </div>
@@ -69,19 +70,19 @@ const { place } = Astro.props
           </> : null
           }
           <li class="flex ml-2">
-            <img src={calendarIcon} class="w-6 h-6" alt="Calendar icon" />
+            <Image src={calendarIcon} class="w-6 h-6" alt="Calendar icon" />
             <div class="ml-2">
               {place.Date}
             </div>
           </li>
           <li class="flex ml-2">
-            <img src={placeIcon} class="w-6 h-6" alt="Place icon" />
+            <Image src={placeIcon} class="w-6 h-6" alt="Place icon" />
             <div class="ml-2">
               {place.Location}, {place.Country}
             </div>
           </li>
           <li class="flex ml-2">
-            <img src={euroIcon} class="w-6 h-6" alt="Euro icon" />
+            <Image src={euroIcon} class="w-6 h-6" alt="Euro icon" />
             <div class="ml-2">
               {place.Price + place.PriceWinePairing}
               {place.PriceWinePairing ?
@@ -92,7 +93,7 @@ const { place } = Astro.props
             </div>
           </li>
           <li class="flex ml-2">
-            <img src={anchorIcon} class="w-6 h-6" alt="Anchor icon" />
+            <Image src={anchorIcon} class="w-6 h-6" alt="Anchor icon" />
             <div class="ml-2">
               <a href={place.URL} class="inline-flex items-center font-regular transition-colors duration-200">Website</a>
             </div>
@@ -101,7 +102,7 @@ const { place } = Astro.props
       </div>
     </div>
     <div>
-      <Swiper photos={place.Photos ? place.Photos : []} client:visible/> 
+      <Swiper photos={place.Photos ? place.Photos : []} client:visible/>
     </div>
   </div>
 </div>

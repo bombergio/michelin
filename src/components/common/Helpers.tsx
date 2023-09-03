@@ -22,11 +22,11 @@ export function numberToCategory(number : number) : number {
 export function starsToIcon(stars: number): string {
   switch (stars) {
     case 1:
-      return oneStar
+      return oneStar.src
     case 2:
-      return twoStars
+      return twoStars.src
     case 3:
-      return threeStars
+      return threeStars.src
     default:
       return ''
   }
