@@ -14,7 +14,7 @@ export default function Mapbox({places}: {places: Place[]}){
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/outdoors-v11',
-      bounds: [Math.min(...lons)-2, Math.min(...lats), Math.max(...lons)+2, Math.max(...lats)]
+      bounds: [Math.min(...lons)-2, Math.min(...lats)-1, Math.max(...lons)+2, Math.max(...lats)+1]
     })
 
     map.scrollZoom.disable()

@@ -13,7 +13,6 @@ export interface Fields {
   Price: number
   PriceWinePairing: number
   Name: string
-  Photos: Array<Photo>
   Country: string
   Food: number
   WinePairing: number
@@ -24,23 +23,8 @@ export interface Fields {
   LaListeRating: string
   FullAddress: string
   Visited: boolean
-}
-
-export interface Photo {
-  id: string
-  url: string
-  thumbnails: Thumbnails
-  filename: string
-}
-
-export interface Thumbnails {
-  small: Thumbnail
-  large: Thumbnail
-  full: Thumbnail
-}
-
-export interface Thumbnail {
-  url: string
+  Images: number
+  Id: number
 }
 
 export interface TableFields {

@@ -102,7 +102,7 @@ const { place } = Astro.props
       </div>
     </div>
     <div>
-      <Swiper photos={place.Photos ? place.Photos : []} client:visible/>
+      <Swiper images={place.Images} restaurantId={place.Id} client:visible/>
     </div>
   </div>
 </div>

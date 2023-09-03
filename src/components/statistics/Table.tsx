@@ -11,7 +11,7 @@ export default function DrawTable({dataSource}: {dataSource: TableFields[]}) {
 
   const columns: ColumnsType<TableFields> = [
     {
-      title: 'Name',
+      title: 'Restaurant',
       dataIndex: 'name',
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ['descend'],

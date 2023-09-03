@@ -1,29 +1,35 @@
 import LightGallery from 'lightgallery/react/Lightgallery.umd.js'
 import 'lightgallery/css/lightgallery.css'
 import { useCallback } from 'react'
-import type { Photo } from './common/Types'
 
 interface Props {
-  photos: Photo[]
+  images: number
+  restaurantId: number
 }
 
-export function Swiper ({ photos}:Props) {
+export function Swiper ({images, restaurantId}:Props) {
   const { PUBLIC_LIGHTGALLERY_LICENSE_KEY } = import.meta.env
 
   function img_attr(i: number): { class: string; tr: string } {
-    if (i === 0) {return { class: 'object-cover w-full rounded shadow-lg h-56 col-span-2 cursor-pointer duration-500 hover:scale-105 lazy', tr: 'tr:w-0.99,h-400/' }} else
-    if (i < 3) {return { class: 'object-cover w-full rounded shadow-lg h-48 cursor-pointer duration-500 hover:scale-105 lazy', tr: 'tr:w-400,h-400/'}} else 
+    if (i === 1) {return { class: 'object-cover w-full rounded shadow-lg h-56 col-span-2 cursor-pointer duration-500 hover:scale-105 lazy', tr: 'tr:w-800,h-400,c-maintain_ratio/' }} else
+    if (i <= 3) {return { class: 'object-cover w-full rounded shadow-lg h-48 cursor-pointer duration-500 hover:scale-105 lazy', tr: 'tr:w-400,h-400/'}} else
     return { class: 'hidden', tr: '' }
   }
 
   const getItems = useCallback(() => {
-    return photos.map((item, index) => {
-      const filename=item.filename.replaceAll(" ", "_")
+    const imgArr = Array.from({ length: images }, (_, i) => i + 1);
+    return imgArr.map((item) => {
       return (
-        <img className={img_attr(index).class} src={index < 3 ? "https://ik.imagekit.io/bomberg/" + img_attr(index).tr + filename : ""} alt={filename} data-src={"https://ik.imagekit.io/bomberg/" + filename} key={item.id} loading="lazy"/>
+        <img className={img_attr(item).class}
+          src={item <= 3 ? "https://ik.imagekit.io/bomberg/" + restaurantId + "/" + img_attr(item).tr + item + ".jpeg" : ""}
+          alt={"Image " + item}
+          data-src={"https://ik.imagekit.io/bomberg/" + restaurantId + "/tr:q-50,w-1600/" + item + ".jpeg"}
+          key={item}
+          loading="lazy"
+        />
       );
     });
-  }, [photos]);
+  }, [images, restaurantId]);
 
   return (
     <>
