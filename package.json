@@ -20,9 +20,9 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/slug": "^5.0.4",
-    "astro": "^3.0.7",
+    "@types/bun": "latest",
+    "astro": "^4.0.0",
     "csv-parse": "^5.5.0",
-    "dotenv": "^16.3.1",
     "radash": "^11.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -35,5 +35,10 @@
     "mapbox-gl": "^2.15.0",
     "tailwindcss": "^3.3.3",
     "victory": "^36.6.11"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }
