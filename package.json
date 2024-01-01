@@ -36,6 +36,9 @@
     "tailwindcss": "^3.3.3",
     "victory": "^36.6.11"
   },
+  "trustedDependencies": [
+    "sharp"
+  ],
   "module": "index.ts",
   "type": "module",
   "peerDependencies": {
