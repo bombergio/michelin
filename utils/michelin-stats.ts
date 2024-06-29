@@ -1,32 +1,36 @@
-import { parse } from "csv-parse/sync"
-import { counting, group } from "radash"
-import fs from "node:fs/promises"
+import { neon } from '@neondatabase/serverless'
+
+interface CountryStars {
+  [country: string]: {
+    '1'?: number
+    '2'?: number
+    '3'?: number
+  }
+}
+import { getCountryCode } from 'countries-list'
+
 
 export async function michelinStats(countries: string[]) {
-  const data = await fs.readFile("files/michelin.csv", "utf-8")
+  const sql = neon(process.env.DATABASE_URL as string)
 
-  const csv = parse(data, {
-    columns: true,
-    skip_empty_lines: true,
-  })
+  const results: CountryStars[] = []
 
-  const keys_to_keep = ["Country", "Award"]
+  for (const country of countries) {
+    const countryCode = getCountryCode(country)
+    const res = await sql`
+      SELECT distinction, COUNT(*) as count
+      FROM "Restaurant"
+      WHERE "countryCode" = LOWER(${countryCode}) AND distinction IN ('1 star', '2 star', '3 star') GROUP BY distinction;`
 
-  const filtered_list = csv
-    .map((element: { [x: string]: any }) =>
-      Object.assign({}, ...keys_to_keep.map((key) => ({ [key]: element[key] })))
-    )
-    .map((key: { Country: string; Award: string }) => ({
-      country: key.Country,
-      stars: key.Award.split(" ").at(0),
-    }))
-    .filter((el: { country: string }) => countries.includes(el.country))
+    const countryStars: CountryStars = {
+      [country]: {}
+    }
+    res.forEach(row => {
+      const starCount: '1' | '2' | '3' = row.distinction.split(' ')[0] as '1' | '2' | '3';
+      countryStars[country][starCount] = parseInt(row.count, 10);
+    })
+    results.push(countryStars)
+  }
 
-  const summed_list = Object.entries(
-    group(filtered_list, (g: { country: string; stars: string }) => g.country)
-  ).map(([x, y]) => {
-    return { [x]: counting(y, (r: { country: string; stars: string }) => r.stars) }
-  })
-
-  return summed_list
+  return results
 }
