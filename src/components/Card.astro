@@ -1,16 +1,15 @@
 ---
-import { Image } from 'astro:assets'
-import googleIcon from '../images/google.svg'
-import calendarIcon from '../images/calendar.svg'
-import placeIcon from '../images/place.svg'
-import euroIcon from '../images/euro.svg'
-import anchorIcon from '../images/anchor.svg'
-import laListeIcon from '../images/laListe.svg'
-import { Swiper } from '../components/Swiper'
-import Valuation from '../components/Valuation.astro'
-import type { Fields } from '../components/common/Types'
-import slug from 'slug'
-import { laListeBadge, starsToIcon } from '../components/common/Helpers'
+import { Image } from "astro:assets"
+import googleIcon from "../images/google.svg"
+import calendarIcon from "../images/calendar.svg"
+import placeIcon from "../images/place.svg"
+import euroIcon from "../images/euro.svg"
+import anchorIcon from "../images/anchor.svg"
+import { Swiper } from "../components/Swiper"
+import Valuation from "../components/Valuation.astro"
+import type { Fields } from "../components/common/Types"
+import slug from "slug"
+import { starsToIcon } from "../components/common/Helpers"
 
 export interface Props {
   place: Fields
@@ -18,21 +17,34 @@ export interface Props {
 
 const { place } = Astro.props
 ---
-<div class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+
+<div
+  class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20"
+>
   <div class="grid gap-5 row-gap-8 lg:grid-cols-2">
     <div class="flex flex-col justify-top">
       <div class="max-w-xl mb-3">
-        <h2 class="max-w-lg mb-2 sm:mb-4 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
+        <h2
+          class="max-w-lg mb-2 sm:mb-4 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none"
+        >
           <span id={slug(place.Name)} class="container">
             {place.Name}
-            <a aria-label={place.Name} href={'#'+slug(place.Name)}>
+            <a aria-label={place.Name} href={"#" + slug(place.Name)}>
               <span class="anchor-link">
-                <Image src={anchorIcon} class="w-7 h-7 pb-1 astro-icon" alt="Anchor icon" />
+                <Image
+                  src={anchorIcon}
+                  class="w-7 h-7 pb-1 astro-icon"
+                  alt="Anchor icon"
+                />
               </span>
             </a>
           </span>
         </h2>
-        <img src={starsToIcon(place.Stars)} alt="Restaurant Michelin stars" class="inline object-center h-8 mb-3"/>
+        <img
+          src={starsToIcon(place.Stars)}
+          alt="Restaurant Michelin stars"
+          class="inline object-center h-8 mb-3"
+        />
         <p class="text-base text-gray-700 md:text-lg">
           {place.Headline}
         </p>
@@ -40,18 +52,22 @@ const { place } = Astro.props
       <div class="grid sm:gap-2 grid-cols-2 sm:space-y-0 mb-3">
         <div>
           <strong>Food</strong>
-          <Valuation stars={place.Food}/>
+          <Valuation stars={place.Food} />
         </div>
-        {place.WinePairing ?
-          <>
-            <div>
-            <strong>Wine pairing</strong>
-            <Valuation stars={place.WinePairing}/>
-          </div>
-          </> : null
+        {
+          place.WinePairing ? (
+            <>
+              <div>
+                <strong>Wine pairing</strong>
+                <Valuation stars={place.WinePairing} />
+              </div>
+            </>
+          ) : null
         }
       </div>
-      <div class="grid sm:gap-2 sm:grid-cols-1 sm:space-y-0 border-l-4 border-red-accent-300">
+      <div
+        class="grid sm:gap-2 sm:grid-cols-1 sm:space-y-0 border-l-4 border-red-accent-300"
+      >
         <ul class="space-y-3">
           <li class="flex ml-2">
             <Image src={calendarIcon} class="w-6 h-6" alt="Calendar icon" />
@@ -69,17 +85,27 @@ const { place } = Astro.props
             <Image src={euroIcon} class="w-6 h-6" alt="Euro icon" />
             <div class="ml-2">
               {place.Price + place.PriceWinePairing}
-              {place.PriceWinePairing ?
-                <>
-                ({place.Price} {place.PriceWinePairing > 0 ? [" Menu + ", place.PriceWinePairing, " Wine pairing"] : null})
-                </> : null
+              {
+                place.PriceWinePairing ? (
+                  <>
+                    ({place.Price}{" "}
+                    {place.PriceWinePairing > 0
+                      ? [" Menu + ", place.PriceWinePairing, " Wine pairing"]
+                      : null}
+                    )
+                  </>
+                ) : null
               } per person
             </div>
           </li>
           <li class="flex ml-2">
             <Image src={anchorIcon} class="w-6 h-6" alt="Anchor icon" />
             <div class="ml-2">
-              <a href={place.URL} class="inline-flex items-center font-regular transition-colors duration-200">Website</a>
+              <a
+                href={place.URL}
+                class="inline-flex items-center font-regular transition-colors duration-200"
+                >Website</a
+              >
             </div>
           </li>
           <li class="flex ml-2">
@@ -92,7 +118,7 @@ const { place } = Astro.props
       </div>
     </div>
     <div>
-      <Swiper images={place.Images} restaurantId={place.Id} client:visible/>
+      <Swiper images={place.Images} restaurantId={place.Id} client:visible />
     </div>
   </div>
 </div>
@@ -107,7 +133,8 @@ const { place } = Astro.props
     vertical-align: middle;
   }
 
-  .container:focus .anchor-link, .container:hover .anchor-link {
+  .container:focus .anchor-link,
+  .container:hover .anchor-link {
     visibility: visible;
   }
 </style>

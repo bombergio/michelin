@@ -1,4 +1,4 @@
-import { VictoryPie, VictoryTheme } from 'victory'
+import { VictoryPie, VictoryTheme } from "victory"
 
 const graphSettings = {
   innerRadius: 70,
@@ -6,14 +6,22 @@ const graphSettings = {
   style: {
     labels: {
       fontFamily: "Montserrat",
-      fill: "black"
-    }
+      fill: "black",
+    },
   },
   radius: 45,
-  padAngle: 2
+  padAngle: 2,
 }
 
-const colors = ["#C22B33", "#F88D42", "#7DCEA4", "#265765", "#30ABCD", "#BFB9A5", "#F6C188"]
+const colors = [
+  "#C22B33",
+  "#F88D42",
+  "#7DCEA4",
+  "#265765",
+  "#30ABCD",
+  "#BFB9A5",
+  "#F6C188",
+]
 
 export default function PieChart(data: any) {
   return (

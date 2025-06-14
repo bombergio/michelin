@@ -28,12 +28,12 @@ export interface Fields {
 }
 
 export interface TableFields {
-  key: React.Key,
-  name: string,
-  stars: number,
-  googleRating: number,
-  country: string,
+  key: React.Key
+  name: string
+  stars: number
+  googleRating: number
+  country: string
   year: string
-  food: number,
-  winePairing: number,
+  food: number
+  winePairing: number
 }

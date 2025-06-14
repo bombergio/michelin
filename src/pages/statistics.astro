@@ -1,21 +1,36 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import { listPlaces } from '../../utils/airtable'
-import Mapbox from '../components/statistics/Mapbox'
-import type { Place, TableFields } from '../components/common/Types'
-import PieChart from '../components/statistics/PieChart'
-import { ChartDataBy, chartData, GroupChartDataByYear } from '../components/statistics/ChartData'
-import Visited from '../components/statistics/Visited.astro'
-import DrawTable from '../components/statistics/Table'
+import Layout from "../layouts/Layout.astro"
+import { listPlaces } from "../../utils/airtable"
+import Mapbox from "../components/statistics/Mapbox"
+import type { Place, TableFields } from "../components/common/Types"
+import PieChart from "../components/statistics/PieChart"
+import {
+  ChartDataBy,
+  chartData,
+  GroupChartDataByYear,
+} from "../components/statistics/ChartData"
+import Visited from "../components/statistics/Visited.astro"
+import DrawTable from "../components/statistics/Table"
 
 const places: Place[] = await listPlaces()
-const countOfStars: number = sum(places.map(r => r.fields.Stars))
+const countOfStars: number = sum(places.map((r) => r.fields.Stars))
 const countOfVisitedRestaurants: number = places.length
-const totalSpentPerPerson: number = sum(places.map(r => (r.fields.Price + r.fields.PriceWinePairing)))
+const totalSpentPerPerson: number = sum(
+  places.map((r) => r.fields.Price + r.fields.PriceWinePairing)
+)
 
-const dataByCountry: chartData[] = ChartDataBy({places: places, fieldKey: 'Country'})
-const dataByGoogleRating: chartData[] = ChartDataBy({places: places, fieldKey: 'GoogleRating'})
-const dataByYear: chartData[] = ChartDataBy({places: places, elementsArray: places.map(r => r.fields.Date.split('-')[0])})
+const dataByCountry: chartData[] = ChartDataBy({
+  places: places,
+  fieldKey: "Country",
+})
+const dataByGoogleRating: chartData[] = ChartDataBy({
+  places: places,
+  fieldKey: "GoogleRating",
+})
+const dataByYear: chartData[] = ChartDataBy({
+  places: places,
+  elementsArray: places.map((r) => r.fields.Date.split("-")[0]),
+})
 const dataStarsByYear: chartData[] = GroupChartDataByYear(places)
 
 const dataTable: TableFields[] = places.map((place, index) => ({
@@ -24,89 +39,146 @@ const dataTable: TableFields[] = places.map((place, index) => ({
   stars: place.fields.Stars,
   googleRating: place.fields.GoogleRating,
   country: place.fields.Country,
-  year: place.fields.Date.split('-')[0],
+  year: place.fields.Date.split("-")[0],
   food: place.fields.Food,
   winePairing: place.fields.WinePairing,
-}));
+}))
 
 function sum(arr: number[]): number {
   return arr.reduce((a: number, b: number) => a + b, 0)
 }
 ---
-<link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet' />
-<Layout title="Some statistics on our foodie journeys"
-  description="Statistics on our - through our foodie journeys.">
+
+<link
+  href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css"
+  rel="stylesheet"
+/>
+<Layout
+  title="Some statistics on our foodie journeys"
+  description="Statistics on our - through our foodie journeys."
+>
   <main>
-    <h1 class="text-center text-4xl sm:text-6xl mt-10 xl:mt-20 px-10">Some statistics on our foodie journeys</h1>
+    <h1 class="text-center text-4xl sm:text-6xl mt-10 xl:mt-20 px-10">
+      Some statistics on our foodie journeys
+    </h1>
     <div>
       <div class="row divide-y-2 divide-red-accent-300 sm:pt-10">
-        <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10">
-          <div class="grid grid-cols-1 row-gap-8 md:grid-cols-4 md:divide-x-2 divide-red-accent-300">
+        <div
+          class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10"
+        >
+          <div
+            class="grid grid-cols-1 row-gap-8 md:grid-cols-4 md:divide-x-2 divide-red-accent-300"
+          >
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{countOfStars}</h6>
-              <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
+              <h6
+                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
+              >
+                {countOfStars}
+              </h6>
+              <p
+                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
+              >
                 Stars
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">
-                {totalSpentPerPerson} <small class="text-4xl">€</small>
+              <h6
+                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
+              >
+                {totalSpentPerPerson}
+                <small class="text-4xl">€</small>
               </h6>
-              <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
+              <p
+                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
+              >
                 Spent per person
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">
-                {Math.round(totalSpentPerPerson * 2 / countOfVisitedRestaurants)} <small class="text-4xl">€</small>
+              <h6
+                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
+              >
+                {
+                  Math.round(
+                    (totalSpentPerPerson * 2) / countOfVisitedRestaurants
+                  )
+                }
+                <small class="text-4xl">€</small>
               </h6>
-              <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
+              <p
+                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
+              >
                 Average bill per restaurant
               </p>
             </div>
             <div class="text-center px-3 mb-5 md:mb-0">
-              <h6 class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5">{countOfVisitedRestaurants}</h6>
-              <p class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
+              <h6
+                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
+              >
+                {countOfVisitedRestaurants}
+              </h6>
+              <p
+                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
+              >
                 Restaurants visited
               </p>
             </div>
           </div>
         </div>
-        <div id="map" class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl h-64 md:h-[38rem]"></div>
-        <Mapbox places={places} client:only="react"/>
-        <div class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2">
+        <div
+          id="map"
+          class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl h-64 md:h-[38rem]"
+        >
+        </div>
+        <Mapbox places={places} client:only="react" />
+        <div
+          class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2"
+        >
           <div class="text-center">
             <h2 class="text-center text-2xl">Restaurants by country</h2>
-            <PieChart data={dataByCountry}/>
+            <PieChart data={dataByCountry} />
           </div>
           <div class="text-center">
             <h2 class="text-center text-2xl">Restaurants by year</h2>
-            <PieChart data={dataByYear}/>
+            <PieChart data={dataByYear} />
           </div>
           <div class="text-center md:mt-10">
             <h2 class="text-center text-2xl">Michelin stars by year</h2>
-            <PieChart data={dataStarsByYear}/>
+            <PieChart data={dataStarsByYear} />
           </div>
           <div class="text-center md:mt-10">
             <h2 class="text-center text-2xl">Restaurants by Google rating</h2>
-            <PieChart data={dataByGoogleRating}/>
+            <PieChart data={dataByGoogleRating} />
           </div>
         </div>
         <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
-          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Visits by country</h2>
-          <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly">
-            <Visited places={places}/>
+          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">
+            Visits by country
+          </h2>
+          <div
+            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
+          >
+            <Visited places={places} />
           </div>
         </div>
         <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
-          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">Summary table</h2>
-          <div class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly">
-            <DrawTable dataSource={dataTable} client:only="react"/>
+          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">
+            Summary table
+          </h2>
+          <div
+            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
+          >
+            <DrawTable dataSource={dataTable} client:only="react" />
           </div>
         </div>
       </div>
-      <div class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10 mb-6">
-        <a href="/" class="inline-flex items-center self-center text-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none">
+      <div
+        class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10 mb-6"
+      >
+        <a
+          href="/"
+          class="inline-flex items-center self-center text-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
+        >
           Back to the main page
         </a>
       </div>

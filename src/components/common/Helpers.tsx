@@ -1,18 +1,18 @@
-import oneStar from '../../images/oneStar.svg'
-import twoStars from '../../images/twoStars.svg'
-import threeStars from '../../images/threeStars.svg'
+import oneStar from "../../images/oneStar.svg"
+import twoStars from "../../images/twoStars.svg"
+import threeStars from "../../images/threeStars.svg"
 
-export function numberToCategory(number : number) : number {
+export function numberToCategory(number: number): number {
   switch (true) {
-    case (number <= 10):
+    case number <= 10:
       return 10
-    case (number <= 50):
+    case number <= 50:
       return 50
-    case (number <= 100):
+    case number <= 100:
       return 100
-    case (number <= 200):
+    case number <= 200:
       return 200
-    case (number <= 500):
+    case number <= 500:
       return 500
     default:
       return 1000
@@ -28,17 +28,19 @@ export function starsToIcon(stars: number): string {
     case 3:
       return threeStars.src
     default:
-      return ''
+      return ""
   }
 }
 
 export function laListeBadge(rating: string): string {
-  switch(true) {
-    case (rating === 'outstanding'): {
+  switch (true) {
+    case rating === "outstanding": {
       return `${outstandingBadge}`
     }
-    case (Number(rating) > 0): {
-      return `<div class="flex">${rating}${topBadge(numberToCategory(Number(rating)))}</div>`
+    case Number(rating) > 0: {
+      return `<div class="flex">${rating}${topBadge(
+        numberToCategory(Number(rating))
+      )}</div>`
     }
     default: {
       return rating
@@ -73,9 +75,17 @@ const topBadge = (topNumber: number) => `
 export function valuationStar(fill: boolean, keyIndex?: number): JSX.Element {
   const baseClassName = "w-6 h-6 stroke-red-accent-300"
   const fillColorClassName = "fill-red-accent-300"
-  const className = fill ? `${baseClassName} ${fillColorClassName}` : baseClassName
+  const className = fill
+    ? `${baseClassName} ${fillColorClassName}`
+    : baseClassName
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className={className} key={keyIndex}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      className={className}
+      key={keyIndex}
+    >
       <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
     </svg>
   )
@@ -84,12 +94,12 @@ export function valuationStar(fill: boolean, keyIndex?: number): JSX.Element {
 export function valuation(stars: number) {
   return (
     <div className="flex">
-      {stars ? [...Array(stars)].map((_el, index) => (
-        valuationStar(true, index)
-      )) : ''}
-      {stars ? [...Array(5 - stars)].map((_el, index) => (
-        valuationStar(false, index)
-      )) : ''}
+      {stars
+        ? [...Array(stars)].map((_el, index) => valuationStar(true, index))
+        : ""}
+      {stars
+        ? [...Array(5 - stars)].map((_el, index) => valuationStar(false, index))
+        : ""}
     </div>
   )
 }
