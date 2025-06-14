@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Montserrat, sans-serif;
+
+  --color-red-50: #ffebee;
+  --color-red-100: #ffcdd2;
+  --color-red-200: #ef9a9a;
+  --color-red-300: #e57373;
+  --color-red-400: #ef5350;
+  --color-red-500: #f44336;
+  --color-red-600: #e53935;
+  --color-red-700: #d32f2f;
+  --color-red-800: #c62828;
+  --color-red-900: #b71c1c;
+  --color-red-accent-100: #ff8a80;
+  --color-red-accent-200: #ff5252;
+  --color-red-accent-300: #C22B33;
+  --color-red-accent-400: #ff1744;
+  --color-red-accent-700: #d50000;
+  --color-deep-purple-50: #ede7f6;
+  --color-deep-purple-100: #d1c4e9;
+  --color-deep-purple-200: #b39ddb;
+  --color-deep-purple-300: #9575cd;
+  --color-deep-purple-400: #7e57c2;
+  --color-deep-purple-500: #673ab7;
+  --color-deep-purple-600: #5e35b1;
+  --color-deep-purple-700: #512da8;
+  --color-deep-purple-800: #4527a0;
+  --color-deep-purple-900: #311b92;
+  --color-deep-purple-accent-100: #b388ff;
+  --color-deep-purple-accent-200: #7c4dff;
+  --color-deep-purple-accent-400: #651fff;
+  --color-deep-purple-accent-700: #6200ea;
+
+  --spacing-7: 1.75rem;
+  --spacing-9: 2.25rem;
+  --spacing-28: 7rem;
+  --spacing-80: 20rem;
+  --spacing-96: 24rem;
+
+  --box-shadow-outline: '0 0 0 3px rgba(101, 31, 255, 0.4)';
+}

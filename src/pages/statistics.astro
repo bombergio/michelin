@@ -64,7 +64,7 @@ function sum(arr: number[]): number {
     <div>
       <div class="row divide-y-2 divide-red-accent-300 sm:pt-10">
         <div
-          class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10"
+          class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-24 lg:px-8 lg:py-10"
         >
           <div
             class="grid grid-cols-1 row-gap-8 md:grid-cols-4 md:divide-x-2 divide-red-accent-300"
@@ -127,12 +127,12 @@ function sum(arr: number[]): number {
         </div>
         <div
           id="map"
-          class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl h-64 md:h-[38rem]"
+          class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) h-64 md:h-152"
         >
         </div>
         <Mapbox places={places} client:only="react" />
         <div
-          class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2"
+          class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2"
         >
           <div class="text-center">
             <h2 class="text-center text-2xl">Restaurants by country</h2>
@@ -151,29 +151,29 @@ function sum(arr: number[]): number {
             <PieChart data={dataByGoogleRating} />
           </div>
         </div>
-        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
+        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl)">
           <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">
             Visits by country
           </h2>
           <div
-            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
+            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
           >
             <Visited places={places} />
           </div>
         </div>
-        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl">
+        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl)">
           <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">
             Summary table
           </h2>
           <div
-            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
+            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
           >
             <DrawTable dataSource={dataTable} client:only="react" />
           </div>
         </div>
       </div>
       <div
-        class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10 mb-6"
+        class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-24 lg:px-8 lg:py-10 mb-6"
       >
         <a
           href="/"

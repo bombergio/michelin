@@ -1,68 +1,74 @@
 ---
-import { SEO } from 'astro-seo'
+import { SEO } from "astro-seo"
+import "../styles/global.css"
 
 export interface Props {
-	title: string
+  title: string
   description: string
 }
 
-const { title, description } = Astro.props as Props;
+const { title, description } = Astro.props as Props
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-		<meta name="generator" content={Astro.generator}/>
-		<SEO
-      title={title}
-      description={description}/>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO title={title} description={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
-	:root {
-		--font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
-		--font-size-lg: clamp(1.2rem, 0.7vw + 1.2rem, 1.5rem);
-		--font-size-xl: clamp(2.44rem, 2.38vw + 1.85rem, 3.75rem);
+  @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
+  :root {
+    --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+    --font-size-lg: clamp(1.2rem, 0.7vw + 1.2rem, 1.5rem);
+    --font-size-xl: clamp(2.44rem, 2.38vw + 1.85rem, 3.75rem);
 
-		--color-text: hsl(12, 5%, 4%);
-		--color-bg: hsl(10, 21%, 95%);
-		--color-border: hsl(17, 24%, 90%);
-	}
+    --color-text: hsl(12, 5%, 4%);
+    --color-bg: hsl(10, 21%, 95%);
+    --color-border: hsl(17, 24%, 90%);
+  }
 
-	html {
-		font-size: var(--font-size-base);
-		color: var(--color-text);
-		background-color: var(--color-bg);
-	}
+  html {
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+  }
 
-	body {
-		margin: 0;
-	}
+  body {
+    margin: 0;
+  }
 
-	:global(h1) {
-		font-size: var(--font-size-xl);
-	}
+  :global(h1) {
+    font-size: var(--font-size-xl);
+  }
 
-	:global(h2) {
-		font-size: var(--font-size-lg);
-	}
+  :global(h2) {
+    font-size: var(--font-size-lg);
+  }
 
-	:global(code) {
-		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-			Bitstream Vera Sans Mono, Courier New, monospace;
-	}
+  :global(code) {
+    font-family:
+      Menlo,
+      Monaco,
+      Lucida Console,
+      Liberation Mono,
+      DejaVu Sans Mono,
+      Bitstream Vera Sans Mono,
+      Courier New,
+      monospace;
+  }
 </style>
