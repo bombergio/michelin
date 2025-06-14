@@ -14,31 +14,31 @@
   "devDependencies": {
     "@astrojs/react": "^3.6.0",
     "@astrojs/tailwind": "^5.1.0",
-    "@playwright/test": "^1.45.0",
+    "@playwright/test": "^1.53.0",
     "@types/bun": "latest",
-    "@types/mapbox-gl": "^2.7.21",
-    "@types/node": "^18.19.39",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@types/slug": "^5.0.8",
+    "@types/mapbox-gl": "^3.4.1",
+    "@types/node": "^24.0.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/slug": "^5.0.9",
     "astro": "^5.9.3",
-    "csv-parse": "^5.5.6",
+    "csv-parse": "^5.6.0",
     "dotenv": "^16.5.0",
-    "radash": "^11.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "slug": "^8.2.3"
+    "radash": "^12.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "slug": "^11.0.0"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.4",
-    "antd": "^5.18.3",
+    "@neondatabase/serverless": "^1.0.1",
+    "antd": "^5.26.0",
     "astro-seo": "^0.8.4",
-    "countries-list": "^3.1.0",
+    "countries-list": "^3.1.1",
     "install": "^0.13.0",
-    "lightgallery": "^2.7.2",
-    "mapbox-gl": "^2.15.0",
+    "lightgallery": "^2.8.3",
+    "mapbox-gl": "^3.12.0",
     "tailwindcss": "^3.4.4",
-    "victory": "^36.9.2"
+    "victory": "^37.3.6"
   },
   "trustedDependencies": [
     "sharp"
@@ -46,6 +46,6 @@
   "module": "index.ts",
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   }
 }

@@ -1,6 +1,7 @@
 import LightGallery from "lightgallery/react/Lightgallery.umd.js"
 import "lightgallery/css/lightgallery.css"
 import { useCallback } from "react"
+import React from "react"
 
 interface Props {
   images: number
@@ -40,7 +41,7 @@ export function Swiper({ images, restaurantId }: Props) {
                 img_attr(item).tr +
                 item +
                 ".jpeg"
-              : ""
+              : undefined
           }
           alt={"Image " + item}
           data-src={

@@ -1,6 +1,8 @@
 import oneStar from "../../images/oneStar.svg"
 import twoStars from "../../images/twoStars.svg"
 import threeStars from "../../images/threeStars.svg"
+import { JSX } from "astro/jsx-runtime"
+import React from "react"
 
 export function numberToCategory(number: number): number {
   switch (true) {
