@@ -1,14 +1,13 @@
 import LightGallery from "lightgallery/react/Lightgallery.umd.js"
 import "lightgallery/css/lightgallery.css"
-import { useCallback } from "react"
-import React from "react"
+import React, { useCallback } from "react"
 
 interface Props {
   images: number
   restaurantId: number
 }
 
-export function Swiper({ images, restaurantId }: Props) {
+export function Swiper({ images, restaurantId }: Readonly<Props>) {
   const { PUBLIC_LIGHTGALLERY_LICENSE_KEY } = import.meta.env
 
   function img_attr(i: number): { class: string; tr: string } {
@@ -59,8 +58,7 @@ export function Swiper({ images, restaurantId }: Props) {
   }, [images, restaurantId])
 
   return (
-    <>
-      <LightGallery
+    <LightGallery
         speed={500}
         download={false}
         elementClassNames="grid grid-cols-2 gap-5"
@@ -68,6 +66,5 @@ export function Swiper({ images, restaurantId }: Props) {
       >
         {getItems()}
       </LightGallery>
-    </>
   )
 }

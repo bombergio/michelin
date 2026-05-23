@@ -12,32 +12,32 @@
     "upgrade": "npm-upgrade"
   },
   "devDependencies": {
-    "@astrojs/react": "^4.3.0",
-    "@playwright/test": "^1.53.0",
+    "@astrojs/react": "^5.0.5",
+    "@playwright/test": "^1.60.0",
     "@types/bun": "latest",
-    "@types/mapbox-gl": "^3.4.1",
-    "@types/node": "^24.0.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
+    "@types/mapbox-gl": "^3.5.0",
+    "@types/node": "^24.12.4",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
     "@types/slug": "^5.0.9",
-    "astro": "^5.9.3",
+    "astro": "^6.3.7",
     "csv-parse": "^5.6.0",
-    "dotenv": "^16.5.0",
-    "radash": "^12.1.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "slug": "^11.0.0"
+    "dotenv": "^16.6.1",
+    "radash": "^12.1.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "slug": "^11.0.1"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.1",
-    "@tailwindcss/vite": "^4.1.10",
-    "antd": "^5.26.0",
+    "@neondatabase/serverless": "^1.1.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "antd": "^5.29.3",
     "astro-seo": "^0.8.4",
-    "countries-list": "^3.1.1",
+    "countries-list": "^3.3.0",
     "install": "^0.13.0",
-    "lightgallery": "^2.8.3",
-    "mapbox-gl": "^3.12.0",
-    "tailwindcss": "^4.1.10",
+    "lightgallery": "^2.9.0",
+    "mapbox-gl": "^3.24.0",
+    "tailwindcss": "^4.3.0",
     "victory": "^37.3.6"
   },
   "trustedDependencies": [
@@ -48,6 +48,6 @@
   "module": "index.ts",
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.3"
   }
 }

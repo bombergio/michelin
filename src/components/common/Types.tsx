@@ -1,6 +1,5 @@
 export interface Place {
   id: string
-  created_time: string
   fields: Fields
 }
 
@@ -20,7 +19,6 @@ export interface Fields {
   Lat: number
   Lon: number
   GoogleRating: number
-  LaListeRating: string
   FullAddress: string
   Visited: boolean
   Images: number
