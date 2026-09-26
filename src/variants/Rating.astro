@@ -1,0 +1,56 @@
+---
+// 0–5 score as a segmented red meter; segments fill in sequence when the card enters view.
+export interface Props {
+  value: number
+}
+
+const { value } = Astro.props
+---
+
+<span class="rating" role="img" aria-label={`${value} out of 5`}>
+  <span class="r-cells" aria-hidden="true">
+    {[1, 2, 3, 4, 5].map((n) => <i class:list={{ on: n <= value }} style={`--i:${n}`} />)}
+  </span>
+  <span class="r-num" aria-hidden="true">
+    {value}
+    <span>/5</span>
+  </span>
+</span>
+
+<style is:global>
+  .rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rating .r-cells {
+    display: inline-flex;
+    gap: 2px;
+  }
+  .rating i {
+    position: relative;
+    overflow: hidden;
+    width: 22px;
+    height: 6px;
+    background: var(--hair);
+  }
+  .rating i.on::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--red);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-out) calc(var(--i) * 70ms);
+  }
+  .js-reveal .entry:not(.in) .rating i.on::after {
+    transform: scaleX(0);
+  }
+  .rating .r-num {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .rating .r-num span {
+    font-weight: 500;
+    color: var(--muted);
+  }
+</style>

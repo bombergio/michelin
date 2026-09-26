@@ -21,3 +21,10 @@ pnpm-debug.log*
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+.agents
+.claude
+.playwright-mcp
+.astro
+.vscode
+skills-lock.json

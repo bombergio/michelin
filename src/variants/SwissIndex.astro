@@ -1,0 +1,508 @@
+---
+import slug from "slug"
+import VariantLayout from "./VariantLayout.astro"
+import Flower from "./Flower.astro"
+import Rating from "./Rating.astro"
+import { Swiper } from "../components/Swiper"
+import { indexData } from "./data"
+
+const { visited, upcoming, starCounts, totalStars, countryCount, firstYear, lastYear } =
+  await indexData()
+const pad = (n: number) => String(n).padStart(3, "0")
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+const starWords = ["One star", "Two stars", "Three stars"]
+const home = "/variants/swiss/"
+// Flower sizes: [hero counts, entry, upcoming]
+const flowerSize = ["clamp(1.3rem, 3vw, 2.25rem)", "clamp(1.25rem, 2vw, 1.6rem)", "1.2rem"]
+---
+
+<VariantLayout
+  title="Our Michelin-starred restaurant journey"
+  description="A list of the Michelin-starred restaurants we have visited and rated."
+  fonts="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300..900;1,300..900&display=swap"
+  page="index"
+>
+  <div class="swiss">
+    <header class="topbar g12">
+      <span class="meta">{firstYear}–{lastYear}</span>
+      <nav>
+        <a href={home} aria-current="page">Index</a>
+        <a href="/variants/swiss/statistics">Statistics</a>
+      </nav>
+    </header>
+
+    <section class="hero g12">
+      <p class="eyebrow">Restaurants visited, rated, remembered</p>
+      <h1>
+        {visited.length} restaurants.<br />
+        <span class="red">{totalStars} stars.</span><br />
+        {countryCount} countries.
+      </h1>
+    </section>
+
+    <section class="counts g12" aria-label="Restaurants by stars">
+      {
+        starCounts.map((count, i) => (
+          <div class="count">
+            <Flower count={i + 1} size={flowerSize[0]} class="red" />
+            <span class="big">{count}</span>
+            <span class="label">{starWords[i]}</span>
+          </div>
+        ))
+      }
+    </section>
+
+    {
+      upcoming.length > 0 && (
+        <section class="block g12">
+          <h2 class="section-label">Upcoming</h2>
+          <ul class="upcoming">
+            {upcoming.map(({ fields }) => (
+              <li>
+                <span class="name">{fields.Name}</span>
+                <Flower count={fields.Stars} size={flowerSize[2]} class="red" />
+                <span class="muted">
+                  {fields.Location}, {fields.Country}
+                </span>
+                <span class="muted tabular">{formatDate(fields.Date)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="block g12">
+      <h2 class="section-label">Index<span class="muted"> / newest first</span></h2>
+      <ol class="entries">
+        {
+          visited.map(({ fields }, i) => (
+            <li class="entry" id={slug(fields.Name)}>
+              <div class="num tabular">{pad(visited.length - i)}</div>
+              <div class="text">
+                <h3>
+                  <a href={`#${slug(fields.Name)}`}>{fields.Name}</a>
+                </h3>
+                <Flower count={fields.Stars} size={flowerSize[1]} class="red entry-stars" />
+                <p class="headline">{fields.Headline}</p>
+                <dl class="facts">
+                  <div>
+                    <dt>Date</dt>
+                    <dd class="tabular">{formatDate(fields.Date)}</dd>
+                  </div>
+                  <div>
+                    <dt>Place</dt>
+                    <dd>
+                      {fields.Location}, {fields.Country}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Per person</dt>
+                    <dd class="tabular">
+                      €{fields.Price + fields.PriceWinePairing}
+                      {fields.PriceWinePairing > 0 && (
+                        <span class="muted">
+                          {" "}
+                          ({fields.Price} + {fields.PriceWinePairing} wine)
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Google</dt>
+                    <dd class="tabular">{fields.GoogleRating.toFixed(1)}</dd>
+                  </div>
+                  <div>
+                    <dt>Food</dt>
+                    <dd>
+                      <Rating value={fields.Food} />
+                    </dd>
+                  </div>
+                  {fields.WinePairing > 0 && (
+                    <div>
+                      <dt>Wine</dt>
+                      <dd>
+                        <Rating value={fields.WinePairing} />
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+                <a class="ext" href={fields.URL} target="_blank" rel="noopener">
+                  Website ↗
+                </a>
+              </div>
+              <div class="photos">
+                {fields.Images > 0 && (
+                  <Swiper images={fields.Images} restaurantId={fields.Id} client:visible />
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <footer class="g12 foot">
+      <a href="/variants/swiss/statistics">Statistics →</a>
+    </footer>
+  </div>
+</VariantLayout>
+
+<script>
+  // Marks entries as they scroll into view; CSS decides what (if anything) animates.
+  const root = document.querySelector<HTMLElement>(".swiss")
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  if (root && !reduce && "IntersectionObserver" in window) {
+    root.classList.add("js-reveal")
+    const io = new IntersectionObserver(
+      (items) => {
+        for (const item of items) {
+          if (item.isIntersecting) {
+            item.target.classList.add("in")
+            io.unobserve(item.target)
+          }
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    )
+    root.querySelectorAll(".entry").forEach((el) => io.observe(el))
+  }
+</script>
+
+<style is:global>
+  html {
+    background: #f7f6f2;
+  }
+  .swiss {
+    --ink: #0b0b0b;
+    --paper: #f7f6f2;
+    --paper-2: #efede7;
+    --red: #d3072b;
+    --muted: #6d6b66;
+    --rule: #0b0b0b;
+    --hair: #d9d6cf;
+    --gutter: clamp(16px, 3vw, 40px);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    font-size: 16px;
+    line-height: 1.45;
+    padding: 0 var(--gutter) 96px;
+    max-width: 1440px;
+    margin: 0 auto;
+    -webkit-font-smoothing: antialiased;
+  }
+  .swiss a {
+    color: inherit;
+  }
+  .swiss a:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+  .swiss .g12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+  .swiss .red {
+    color: var(--red);
+  }
+  .swiss .muted {
+    color: var(--muted);
+  }
+  .swiss .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* top bar */
+  .swiss .topbar {
+    align-items: baseline;
+    padding: 20px 0 14px;
+    border-bottom: 2px solid var(--rule);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .swiss .topbar .meta {
+    grid-column: 1 / span 8;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .swiss .topbar nav {
+    grid-column: 9 / -1;
+    display: flex;
+    gap: 24px;
+    justify-content: flex-end;
+  }
+  .swiss .topbar nav a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  .swiss .topbar nav a[aria-current="page"],
+  .swiss .topbar nav a:hover {
+    color: var(--ink);
+  }
+
+  /* hero */
+  .swiss .hero {
+    padding: clamp(48px, 10vw, 140px) 0 clamp(40px, 6vw, 80px);
+  }
+  .swiss .eyebrow {
+    grid-column: 1 / span 3;
+    margin: 0;
+    padding-top: 1.1em;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .swiss h1 {
+    grid-column: 4 / -1;
+    margin: 0;
+    font-size: clamp(2.6rem, 8.2vw, 8.5rem);
+    line-height: 0.92;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+  }
+
+  /* counts */
+  .swiss .counts {
+    border-top: 2px solid var(--rule);
+  }
+  .swiss .count {
+    grid-column: span 4;
+    display: grid;
+    align-content: start;
+    padding: 16px 0 28px;
+    border-right: 1px solid var(--hair);
+  }
+  .swiss .count:last-child {
+    border-right: 0;
+  }
+  .swiss .count .big {
+    font-size: clamp(4rem, 11vw, 10rem);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    margin-top: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+  .swiss .count .label {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* sections */
+  .swiss .block {
+    border-top: 2px solid var(--rule);
+    padding-top: 16px;
+    margin-top: 64px;
+  }
+  .swiss .section-label {
+    grid-column: 1 / span 3;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+  .swiss .upcoming,
+  .swiss .entries {
+    grid-column: 4 / -1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .swiss .upcoming li {
+    display: grid;
+    grid-template-columns: 2fr auto 2fr 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .swiss .upcoming .name {
+    font-weight: 700;
+  }
+
+  /* entries */
+  .swiss .entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.15fr);
+    column-gap: var(--gutter);
+    padding: 0 0 56px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--hair);
+    scroll-margin-top: 24px;
+  }
+  .swiss .entry:target h3 a {
+    background: var(--red);
+    color: #fff;
+  }
+  .swiss .num {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--red);
+    padding-top: 0.6em;
+  }
+  .swiss .entry h3 {
+    margin: 0 0 10px;
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+  .swiss .entry h3 a {
+    text-decoration: none;
+  }
+  .swiss .headline {
+    margin: 16px 0 24px;
+    max-width: 34ch;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+  .swiss .facts {
+    margin: 0 0 20px;
+    border-top: 1px solid var(--ink);
+    font-size: 14px;
+  }
+  .swiss .facts > div {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    align-items: center;
+    min-height: 36px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .swiss .facts dt {
+    color: var(--muted);
+  }
+  .swiss .facts dd {
+    margin: 0;
+    font-weight: 500;
+  }
+  .swiss .ext {
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1.5px solid currentColor;
+  }
+  .swiss .ext:hover {
+    color: var(--red);
+  }
+
+  /* photos (LightGallery thumbnails) — neutralise Tailwind defaults from Swiper */
+  .swiss .photos .lg-react-element {
+    gap: 8px;
+  }
+  .swiss .photos img {
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+    scale: none;
+  }
+
+  .swiss .foot {
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 2px solid var(--rule);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .swiss .foot a {
+    grid-column: 7 / -1;
+    justify-self: end;
+    text-decoration: none;
+  }
+
+  /* stars, numerals, thumbnail zoom */
+  .swiss .count .flowers {
+    margin-top: 4px;
+  }
+  .swiss .entry-stars {
+    margin: 4px 0 0;
+  }
+  @media (min-width: 901px) {
+    .swiss .entry {
+      grid-template-columns: 88px minmax(0, 1fr) minmax(0, 1.15fr);
+    }
+  }
+  .swiss .num {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-weight: 200;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    padding-top: 0;
+  }
+  /* zoom inside a fixed frame: scale up, clip back to the original box */
+  .swiss .photos img {
+    transition:
+      transform 0.7s var(--ease-out),
+      clip-path 0.7s var(--ease-out),
+      filter 0.4s;
+    clip-path: inset(0);
+    filter: saturate(0.85);
+  }
+  .swiss .photos img:hover {
+    transform: scale(1.08);
+    clip-path: inset(3.7%);
+    filter: saturate(1.05);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swiss * {
+      transition: none !important;
+    }
+    .swiss .photos img:hover {
+      transform: none !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .swiss .eyebrow,
+    .swiss h1,
+    .swiss .section-label,
+    .swiss .upcoming,
+    .swiss .entries {
+      grid-column: 1 / -1;
+    }
+    .swiss .eyebrow {
+      padding: 0 0 16px;
+    }
+    .swiss .section-label {
+      position: static;
+      margin-bottom: 24px;
+    }
+    .swiss .entry {
+      grid-template-columns: 56px minmax(0, 1fr);
+      row-gap: 24px;
+    }
+    .swiss .photos {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 600px) {
+    .swiss .topbar .meta {
+      grid-column: 1 / span 6;
+    }
+    .swiss .topbar nav {
+      grid-column: 7 / -1;
+      gap: 14px;
+    }
+    .swiss .upcoming li {
+      grid-template-columns: 1fr auto;
+    }
+    .swiss .entry {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 16px;
+    }
+    .swiss .num {
+      padding: 0;
+    }
+    .swiss .count .big {
+      font-size: 3.25rem;
+    }
+  }
+</style>
