@@ -7,12 +7,13 @@ html {
 .swiss {
   --ink: #0b0b0b;
   --paper: #f7f6f2;
-  --red: #d3072b;
+  --red: #bd2333;
   --muted: #6d6b66;
   --rule: #0b0b0b;
   --hair: #d9d6cf;
   --gutter: clamp(16px, 3vw, 40px);
   --section-gap: clamp(40px, 6vw, 80px);
+  --hero-gap: clamp(48px, 8vw, 112px);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --font-figures: "Geist", "Inter Tight", sans-serif;
   font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -76,13 +77,18 @@ html {
 }
 
 /* hero */
+/* equal space above and below, measured from cap height and baseline (not the line box) */
 .swiss .hero {
-  padding: clamp(48px, 10vw, 140px) 0 var(--section-gap);
+  align-items: start;
+  padding: var(--hero-gap) 0;
+}
+.swiss .eyebrow,
+.swiss h1 {
+  text-box: trim-both cap alphabetic;
 }
 .swiss .eyebrow {
   grid-column: 1 / span 3;
   margin: 0;
-  padding-top: 1.1em;
   font-size: 14px;
   font-weight: 500;
   color: var(--muted);
@@ -92,8 +98,8 @@ html {
   margin: 0;
   font-size: clamp(2.6rem, 8.2vw, 8.5rem);
   line-height: 0.92;
-  font-weight: 800;
-  letter-spacing: -0.045em;
+  font-weight: 600;
+  letter-spacing: -0.035em;
 }
 
 /* stat columns: each column carries its own top rule, separated by the gutter */

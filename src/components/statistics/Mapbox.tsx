@@ -9,7 +9,7 @@ mapboxgl.accessToken = import.meta.env.PUBLIC_MAPKEY_TOKEN
 export default function Mapbox({
   places,
   mapStyle = "mapbox://styles/mapbox/outdoors-v11",
-  markerColor = "#C22B33",
+  markerColor = "#bd2333",
 }: {
   places: Place[]
   mapStyle?: string
