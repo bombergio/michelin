@@ -60,16 +60,24 @@ html {
 .swiss .topbar nav {
   grid-column: 9 / -1;
   display: flex;
-  gap: 24px;
+  gap: 28px;
   justify-content: flex-end;
 }
+/* tabs: thin line under both, red bar under the current page */
 .swiss .topbar nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   text-decoration: none;
-  color: var(--muted);
-}
-.swiss .topbar nav a[aria-current="page"],
-.swiss .topbar nav a:hover {
   color: var(--ink);
+  box-shadow: inset 0 -1px 0 var(--hair);
+  transition: box-shadow 0.2s;
+}
+.swiss .topbar nav a[aria-current="page"] {
+  box-shadow: inset 0 -3px 0 var(--red);
+}
+.swiss .topbar nav a:not([aria-current]):hover {
+  box-shadow: inset 0 -3px 0 var(--ink);
 }
 
 /* hero */
@@ -174,9 +182,21 @@ html {
 }
 
 @media (max-width: 600px) {
+  /* full-width tabs; tighter space between them and the headline */
+  .swiss .topbar {
+    padding: 8px 0 0;
+  }
   .swiss .topbar nav {
-    grid-column: 7 / -1;
-    gap: 14px;
+    grid-column: 1 / -1;
+    gap: 0;
+  }
+  .swiss .topbar nav a {
+    flex: 1;
+    justify-content: center;
+  }
+  .swiss .hero {
+    padding-top: 42px;
   }
 }
+
 
