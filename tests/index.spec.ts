@@ -1,16 +1,14 @@
 import { test, expect } from "@playwright/test"
 
-test("Check index page", async ({ page }) => {
+test("Index page links to statistics", async ({ page }) => {
   await page.goto("/")
-  page.getByRole("heading", {
-    name: "Michelin-starred restaurants we have visited so far",
-  })
-  await page.getByRole("link", { name: "Some fancy statistics" }).click()
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("restaurants.")
+  await page.getByRole("navigation").getByRole("link", { name: "Statistics" }).click()
   await expect(page).toHaveURL("/statistics")
 })
 
-test("Check if restaurant blocks are rendered", async ({ page }) => {
+test("Restaurant entries are rendered", async ({ page }) => {
   await page.goto("/")
-  page.locator(".row > div:nth-child(3) > div")
-  page.locator('div:has-text("6 5 5")').nth(1)
+  await expect(page.locator(".entry").first()).toBeVisible()
+  await expect(page.locator(".entry h3").first()).not.toBeEmpty()
 })

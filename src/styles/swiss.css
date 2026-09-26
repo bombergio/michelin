@@ -1,0 +1,184 @@
+/* Shared Swiss layout: tokens, 12-col grid, top bar, hero, sections, stat columns, footer. */
+
+html {
+  background: #f7f6f2;
+}
+
+.swiss {
+  --ink: #0b0b0b;
+  --paper: #f7f6f2;
+  --red: #d3072b;
+  --muted: #6d6b66;
+  --rule: #0b0b0b;
+  --hair: #d9d6cf;
+  --gutter: clamp(16px, 3vw, 40px);
+  --section-gap: clamp(40px, 6vw, 80px);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-figures: "Geist", "Inter Tight", sans-serif;
+  font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: 16px;
+  line-height: 1.45;
+  padding: 0 var(--gutter) 96px;
+  max-width: 1440px;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+}
+.swiss a {
+  color: inherit;
+}
+.swiss a:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+.swiss .g12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+.swiss .red {
+  color: var(--red);
+}
+.swiss .muted {
+  color: var(--muted);
+}
+.swiss .tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* top bar */
+.swiss .topbar {
+  align-items: baseline;
+  padding: 20px 0 14px;
+  border-bottom: 2px solid var(--rule);
+  font-size: 14px;
+  font-weight: 600;
+}
+.swiss .topbar .meta {
+  grid-column: 1 / span 8;
+  color: var(--muted);
+  font-weight: 500;
+}
+.swiss .topbar nav {
+  grid-column: 9 / -1;
+  display: flex;
+  gap: 24px;
+  justify-content: flex-end;
+}
+.swiss .topbar nav a {
+  text-decoration: none;
+  color: var(--muted);
+}
+.swiss .topbar nav a[aria-current="page"],
+.swiss .topbar nav a:hover {
+  color: var(--ink);
+}
+
+/* hero */
+.swiss .hero {
+  padding: clamp(48px, 10vw, 140px) 0 var(--section-gap);
+}
+.swiss .eyebrow {
+  grid-column: 1 / span 3;
+  margin: 0;
+  padding-top: 1.1em;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.swiss h1 {
+  grid-column: 4 / -1;
+  margin: 0;
+  font-size: clamp(2.6rem, 8.2vw, 8.5rem);
+  line-height: 0.92;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+/* stat columns: each column carries its own top rule, separated by the gutter */
+.swiss .stat {
+  display: grid;
+  align-content: start;
+  padding-top: 16px;
+  border-top: 2px solid var(--rule);
+}
+.swiss .stat .big {
+  font-family: var(--font-figures);
+  font-weight: 200;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.swiss .stat .label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* sections */
+.swiss .block {
+  border-top: 2px solid var(--rule);
+  padding-top: 16px;
+  margin-top: 64px;
+}
+.swiss .stats-row + .block {
+  margin-top: var(--section-gap);
+}
+.swiss .section-label {
+  grid-column: 1 / span 3;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* footer */
+.swiss .foot {
+  margin-top: 64px;
+  padding-top: 14px;
+  border-top: 2px solid var(--rule);
+  font-size: 14px;
+  font-weight: 600;
+}
+.swiss .foot a {
+  grid-column: 7 / -1;
+  justify-self: end;
+  text-decoration: none;
+}
+
+.swiss .icon-arrow {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.25em;
+  vertical-align: 0.05em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swiss * {
+    transition: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .swiss .eyebrow,
+  .swiss h1,
+  .swiss .section-label {
+    grid-column: 1 / -1;
+  }
+  .swiss .eyebrow {
+    padding: 0 0 16px;
+  }
+  .swiss .section-label {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .swiss .topbar .meta {
+    grid-column: 1 / span 6;
+  }
+  .swiss .topbar nav {
+    grid-column: 7 / -1;
+    gap: 14px;
+  }
+}

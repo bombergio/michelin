@@ -2,11 +2,14 @@
 import Layout from "../layouts/Layout.astro"
 ---
 
-<div class="flex flex-col items-center justify-center h-full">
-  <Layout
-    title="Page not found"
-    description="The webpage you are looking for was not found"
-  >
-    <h1>The webpage you are looking for was not found</h1>
-  </Layout>
-</div>
+<Layout title="Page not found" description="The webpage you are looking for was not found">
+  <div class="swiss">
+    <section class="hero g12">
+      <p class="eyebrow">404</p>
+      <h1>This table<br /><span class="red">doesn’t exist.</span></h1>
+    </section>
+    <footer class="g12 foot">
+      <a href="/">← Index</a>
+    </footer>
+  </div>
+</Layout>

@@ -1,7 +1,7 @@
 import { counting, group } from "radash"
-import { listPlaces } from "../../utils/places"
-import { michelinStats } from "../../utils/michelin-stats"
-import type { Place } from "../components/common/Types"
+import { listPlaces } from "./places"
+import { michelinStats } from "./michelin-stats"
+import type { Place } from "../src/components/common/Types"
 
 export interface Bar {
   label: string
