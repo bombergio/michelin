@@ -7,7 +7,7 @@ import ArrowIcon from "../components/ArrowIcon.astro"
 import { Swiper } from "../components/Swiper"
 import { indexData } from "../../utils/stats"
 
-const { visited, upcoming, starCounts, totalStars, countryCount, firstYear, lastYear } =
+const { visited, upcoming, starCounts, totalStars, countryCount } =
   await indexData()
 const pad = (n: number) => String(n).padStart(3, "0")
 const formatDate = (d: string) =>
@@ -23,7 +23,6 @@ const flowerSize = ["clamp(1.3rem, 3vw, 2.25rem)", "clamp(1.25rem, 2vw, 1.6rem)"
 >
   <div class="swiss">
     <header class="topbar g12">
-      <span class="meta">{firstYear}–{lastYear}</span>
       <nav>
         <a href="/" aria-current="page">Index</a>
         <a href="/statistics">Statistics</a>

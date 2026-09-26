@@ -28,7 +28,6 @@ export async function indexData() {
   const upcoming = await listPlaces(false)
   const byStars = counting(visited, (p) => String(p.fields.Stars))
   const countries = new Set(visited.map((p) => p.fields.Country))
-  const years = visited.map(year)
 
   return {
     visited: [...visited].reverse(),
@@ -36,8 +35,6 @@ export async function indexData() {
     starCounts: [1, 2, 3].map((s) => byStars[String(s)] ?? 0),
     totalStars: sum(visited.map((p) => p.fields.Stars)),
     countryCount: countries.size,
-    firstYear: years[0],
-    lastYear: years[years.length - 1],
   }
 }
 

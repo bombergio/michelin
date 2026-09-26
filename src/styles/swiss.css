@@ -10,6 +10,8 @@ html {
   --red: #bd2333;
   --muted: #6d6b66;
   --rule: #0b0b0b;
+  /* structural rules: quiet section dividers only */
+  --rule-section: 1px solid var(--hair);
   --hair: #d9d6cf;
   --gutter: clamp(16px, 3vw, 40px);
   --section-gap: clamp(40px, 6vw, 80px);
@@ -52,14 +54,8 @@ html {
 .swiss .topbar {
   align-items: baseline;
   padding: 20px 0 14px;
-  border-bottom: 2px solid var(--rule);
   font-size: 14px;
   font-weight: 600;
-}
-.swiss .topbar .meta {
-  grid-column: 1 / span 8;
-  color: var(--muted);
-  font-weight: 500;
 }
 .swiss .topbar nav {
   grid-column: 9 / -1;
@@ -102,16 +98,14 @@ html {
   letter-spacing: -0.035em;
 }
 
-/* stat columns: each column carries its own top rule, separated by the gutter */
+/* stat columns: separated by the gutter and whitespace alone */
 .swiss .stat {
   display: grid;
   align-content: start;
-  padding-top: 16px;
-  border-top: 2px solid var(--rule);
 }
 .swiss .stat .big {
   font-family: var(--font-figures);
-  font-weight: 200;
+  font-weight: 300;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -122,7 +116,7 @@ html {
 
 /* sections */
 .swiss .block {
-  border-top: 2px solid var(--rule);
+  border-top: var(--rule-section);
   padding-top: 16px;
   margin-top: 64px;
 }
@@ -141,7 +135,7 @@ html {
 .swiss .foot {
   margin-top: 64px;
   padding-top: 14px;
-  border-top: 2px solid var(--rule);
+  border-top: var(--rule-section);
   font-size: 14px;
   font-weight: 600;
 }
@@ -180,11 +174,9 @@ html {
 }
 
 @media (max-width: 600px) {
-  .swiss .topbar .meta {
-    grid-column: 1 / span 6;
-  }
   .swiss .topbar nav {
     grid-column: 7 / -1;
     gap: 14px;
   }
 }
+
