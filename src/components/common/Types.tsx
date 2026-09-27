@@ -24,14 +24,3 @@ export interface Fields {
   Images: number
   Id: number
 }
-
-export interface TableFields {
-  key: React.Key
-  name: string
-  stars: number
-  googleRating: number
-  country: string
-  year: string
-  food: number
-  winePairing: number
-}

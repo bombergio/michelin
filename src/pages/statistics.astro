@@ -1,195 +1,516 @@
 ---
+import slug from "slug"
+import "mapbox-gl/dist/mapbox-gl.css"
 import Layout from "../layouts/Layout.astro"
-import { listPlaces } from "../../utils/places"
+import Flower from "../components/Flower.astro"
 import Mapbox from "../components/statistics/Mapbox"
-import type { Place, TableFields } from "../components/common/Types"
-import PieChart from "../components/statistics/PieChart"
-import {
-  ChartDataBy,
-  chartData,
-  GroupChartDataByYear,
-} from "../components/statistics/ChartData"
-import Visited from "../components/statistics/Visited.astro"
-import DrawTable from "../components/statistics/Table"
+import { statsData } from "../../utils/stats"
 
-const places: Place[] = await listPlaces()
-const countOfStars: number = sum(places.map((r) => r.fields.Stars))
-const countOfVisitedRestaurants: number = places.length
-const totalSpentPerPerson: number = sum(
-  places.map((r) => r.fields.Price + r.fields.PriceWinePairing)
-)
-
-const dataByCountry: chartData[] = ChartDataBy({
-  places: places,
-  fieldKey: "Country",
-})
-const dataByGoogleRating: chartData[] = ChartDataBy({
-  places: places,
-  fieldKey: "GoogleRating",
-})
-const dataByYear: chartData[] = ChartDataBy({
-  places: places,
-  elementsArray: places.map((r) => r.fields.Date.split("-")[0]),
-})
-const dataStarsByYear: chartData[] = GroupChartDataByYear(places)
-
-const dataTable: TableFields[] = places.map((place, index) => ({
-  key: index + 1,
-  name: place.fields.Name,
-  stars: place.fields.Stars,
-  googleRating: place.fields.GoogleRating,
-  country: place.fields.Country,
-  year: place.fields.Date.split("-")[0],
-  food: place.fields.Food,
-  winePairing: place.fields.WinePairing,
-}))
-
-function sum(arr: number[]): number {
-  return arr.reduce((a: number, b: number) => a + b, 0)
-}
+const s = await statsData()
+const charts = [
+  { title: "Restaurants by country", bars: s.byCountry },
+  { title: "Restaurants by year", bars: s.byYear },
+  { title: "Stars by year", bars: s.starsByYear },
+  { title: "Restaurants by Google rating", bars: s.byRating },
+]
+const sections = [
+  { id: "places", label: "Map" },
+  { id: "distribution", label: "Distribution" },
+  { id: "coverage", label: "Coverage" },
+  { id: "table", label: "Table" },
+]
+const metrics = [
+  { value: s.totalStars, label: "Stars collected" },
+  { value: s.restaurantCount, label: "Restaurants visited" },
+  { value: `€${s.spentPerPerson.toLocaleString("en-GB")}`, label: "Spent per person" },
+  { value: `€${s.averageBill}`, label: "Average bill for two" },
+]
 ---
 
-<link
-  href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css"
-  rel="stylesheet"
-/>
 <Layout
-  title="Some statistics on our foodie journeys"
-  description="Statistics on our - through our foodie journeys."
+  title="Statistics on our foodie journeys"
+  description="Statistics on our Michelin-starred foodie journeys."
 >
-  <main>
-    <h1 class="text-center text-4xl sm:text-6xl mt-10 xl:mt-20 px-10">
-      Some statistics on our foodie journeys
-    </h1>
-    <div>
-      <div class="row divide-y-2 divide-red-accent-300 sm:pt-10">
-        <div
-          class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-24 lg:px-8 lg:py-10"
-        >
-          <div
-            class="grid grid-cols-1 row-gap-8 md:grid-cols-4 md:divide-x-2 divide-red-accent-300"
-          >
-            <div class="text-center px-3 mb-5 md:mb-0">
-              <h6
-                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
-              >
-                {countOfStars}
-              </h6>
-              <p
-                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
-              >
-                Stars
-              </p>
-            </div>
-            <div class="text-center px-3 mb-5 md:mb-0">
-              <h6
-                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
-              >
-                {totalSpentPerPerson}
-                <small class="text-4xl">€</small>
-              </h6>
-              <p
-                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
-              >
-                Spent per person
-              </p>
-            </div>
-            <div class="text-center px-3 mb-5 md:mb-0">
-              <h6
-                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
-              >
-                {
-                  Math.round(
-                    (totalSpentPerPerson * 2) / countOfVisitedRestaurants
-                  )
-                }
-                <small class="text-4xl">€</small>
-              </h6>
-              <p
-                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
-              >
-                Average bill per restaurant
-              </p>
-            </div>
-            <div class="text-center px-3 mb-5 md:mb-0">
-              <h6
-                class="text-4xl font-bold lg:text-5xl xl:text-6xl mb-1 md:mb-5"
-              >
-                {countOfVisitedRestaurants}
-              </h6>
-              <p
-                class="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base"
-              >
-                Restaurants visited
-              </p>
-            </div>
+  <div class="swiss">
+    <header class="topbar g12">
+      <nav>
+        <a href="/">Index</a>
+        <a href="/statistics" aria-current="page">Statistics</a>
+      </nav>
+    </header>
+
+
+    <section class="hero g12">
+      <p class="eyebrow">Figures</p>
+      <h1>The numbers<br />behind the plates.</h1>
+    </section>
+
+    <section class="stats-row g12">
+      {
+        metrics.map((m) => (
+          <div class="stat metric">
+            <span class="big">{m.value}</span>
+            <span class="label">{m.label}</span>
           </div>
-        </div>
-        <div
-          id="map"
-          class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) h-64 md:h-152"
-        >
-        </div>
-        <Mapbox places={places} client:only="react" />
-        <div
-          class="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-0 lg:px-8 lg:py-10 grid grid-cols-1 row-gap-8 md:grid-cols-2"
-        >
-          <div class="text-center">
-            <h2 class="text-center text-2xl">Restaurants by country</h2>
-            <PieChart data={dataByCountry} />
-          </div>
-          <div class="text-center">
-            <h2 class="text-center text-2xl">Restaurants by year</h2>
-            <PieChart data={dataByYear} />
-          </div>
-          <div class="text-center md:mt-10">
-            <h2 class="text-center text-2xl">Michelin stars by year</h2>
-            <PieChart data={dataStarsByYear} />
-          </div>
-          <div class="text-center md:mt-10">
-            <h2 class="text-center text-2xl">Restaurants by Google rating</h2>
-            <PieChart data={dataByGoogleRating} />
-          </div>
-        </div>
-        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl)">
-          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">
-            Visits by country
-          </h2>
-          <div
-            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
-          >
-            <Visited places={places} />
-          </div>
-        </div>
-        <div class="px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl)">
-          <h2 class="text-center py-10 md:py-0 md:mt-10 font-bold text-4xl">
-            Summary table
-          </h2>
-          <div
-            class="mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-0 lg:px-8 lg:py-10 flex flex-row flex-wrap justify-evenly"
-          >
-            <DrawTable dataSource={dataTable} client:only="react" />
-          </div>
-        </div>
+        ))
+      }
+    </section>
+
+    <section class="block g12" id="places">
+      <h2 class="section-label">01 Map</h2>
+      <div class="wide">
+        <div id="map" class="map"></div>
+        <Mapbox
+          places={s.places}
+          mapStyle="mapbox://styles/mapbox/light-v11"
+          markerColor="#bd2333"
+          client:only="react"
+        />
       </div>
-      <div
-        class="flex flex-col px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-(--breakpoint-xl) md:px-24 lg:px-8 lg:py-10 mb-6"
-      >
-        <a
-          href="/"
-          class="inline-flex items-center self-center text-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-        >
-          Back to the main page
-        </a>
+    </section>
+
+    <section class="block g12" id="distribution">
+      <h2 class="section-label">02 Distribution</h2>
+      <div class="wide charts">
+        {
+          charts.map((chart) => {
+            const max = Math.max(...chart.bars.map((b) => b.value))
+            return (
+              <figure class="chart">
+                <figcaption>{chart.title}</figcaption>
+                <ul>
+                  {chart.bars.map((b) => (
+                    <li>
+                      <span class="bar-label">{b.label}</span>
+                      <span class="bar-track">
+                        <span
+                          class:list={["bar", { top: b.value === max }]}
+                          style={`width:${(b.value / max) * 100}%`}
+                        />
+                      </span>
+                      <span class="bar-value">{b.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </figure>
+            )
+          })
+        }
+      </div>
+    </section>
+
+    <section class="block g12" id="coverage">
+      <h2 class="section-label">
+        03 Coverage<span class="muted"><br />visited / all starred</span>
+      </h2>
+      <div class="wide coverage">
+        {
+          s.coverage.map((c) => (
+            <div class="country">
+              <h3>{c.country}</h3>
+              {c.rows.map((r) => (
+                <div class="cov-row">
+                  <Flower count={r.stars} size="0.7rem" class="red" />
+                  <span class="cov-track">
+                    <span
+                      class="cov-bar"
+                      style={`width:${Math.max((r.visited / r.total) * 100, r.visited ? 2 : 0)}%`}
+                    />
+                  </span>
+                  <span class="cov-num">
+                    {r.visited}
+                    <span class="muted">/{r.total}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="block g12" id="table">
+      <h2 class="section-label">
+        04 Table<span class="muted"><br />click headers to sort</span>
+      </h2>
+      <div class="wide table-wrap">
+        <table data-sortable>
+          <thead>
+            <tr>
+              <th data-sort="text">Restaurant</th>
+              <th data-sort="num">Stars</th>
+              <th data-sort="num" class="hide-sm">Food</th>
+              <th data-sort="num" class="hide-sm">Wine</th>
+              <th data-sort="num" class="hide-sm">Google</th>
+              <th data-sort="num" class="hide-sm">€ p.p.</th>
+              <th data-sort="text" class="hide-sm">Country</th>
+              <th data-sort="text">
+                <span class="date-full">Date</span><span class="date-year">Year</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              s.table.map((r) => (
+                <tr>
+                  <td>
+                    <a href={`/#${slug(r.name)}`}>{r.name}</a>
+                  </td>
+                  <td data-value={r.stars}>
+                    <Flower count={r.stars} size="0.7rem" class="red" />
+                  </td>
+                  <td class="num hide-sm">{r.food || "–"}</td>
+                  <td class="num hide-sm">{r.wine || "–"}</td>
+                  <td class="num hide-sm">{r.rating.toFixed(1)}</td>
+                  <td class="num hide-sm">{r.spent}</td>
+                  <td class="hide-sm">{r.country}</td>
+                  <td class="num" data-value={r.date}>
+                    <span class="date-full">{r.date}</span>
+                    <span class="date-year">{r.date.slice(0, 4)}</span>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section menu: floating button names the current section and opens a sheet -->
+    <div class="toc">
+      <button type="button" class="toc-btn" popovertarget="toc-sheet">
+        <span class="visually-hidden">Jump to section. Current:</span>
+        <span data-toc-current>{sections[0].label}</span>
+        <svg class="toc-btn-icon" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M2 4.5L6 8.5L10 4.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </button>
+      <div id="toc-sheet" class="toc-sheet" popover>
+        <p class="toc-sheet-title">Sections</p>
+        <ol>
+          {
+            sections.map((sec) => (
+              <li>
+                <a href={`#${sec.id}`} data-toc-link={sec.id}>
+                  <span class="toc-label">{sec.label}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </div>
-  </main>
+
+    <footer class="g12 foot">
+      <a href="/">← Index</a>
+    </footer>
+  </div>
 </Layout>
 
+<script>
+  import { initSortable } from "../scripts/sortable"
+  initSortable()
+
+  // Track the section in view: labels the floating button and highlights it in the sheet
+  const sections = [...document.querySelectorAll<HTMLElement>("section.block[id]")]
+  const current = document.querySelector("[data-toc-current]")
+  const setActive = (id: string) => {
+    document.querySelectorAll<HTMLElement>("[data-toc-link]").forEach((a) => {
+      a.toggleAttribute("aria-current", a.dataset.tocLink === id)
+    })
+    const label = document.querySelector(`[data-toc-link="${id}"] .toc-label`)
+    if (current && label) current.textContent = label.textContent
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) if (e.isIntersecting) setActive((e.target as HTMLElement).id)
+    },
+    { rootMargin: "-30% 0px -60% 0px" }
+  )
+  sections.forEach((sec) => io.observe(sec))
+
+  // Close the sheet after choosing a section
+  const sheet = document.getElementById("toc-sheet")
+  sheet?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => sheet.hidePopover()))
+</script>
+
 <style is:global>
-  button.ant-btn-primary {
-    background-color: #651fff;
-    border-color: #651fff;
-    height: 28px !important;
+  .swiss h1 {
+    font-size: clamp(2.6rem, 7.4vw, 7.5rem);
+  }
+  .swiss .section-label .muted {
+    font-weight: 500;
+  }
+
+  .swiss .metric {
+    grid-column: span 3;
+  }
+  .swiss .metric .big {
+    font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+    letter-spacing: -0.03em;
+    margin: 12px 0 8px;
+  }
+
+  /* ---------- section menu ---------- */
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .swiss section.block[id] {
+    scroll-margin-top: 24px;
+  }
+  .swiss .toc-btn {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 30;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 18px;
+    border: 0;
+    background: var(--ink);
+    color: #fff;
+    font: 600 14px/1 "Inter Tight", sans-serif;
+    cursor: pointer;
+  }
+  .swiss .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .swiss .toc-btn-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    transform: rotate(180deg);
+  }
+  .swiss .toc-btn:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+  .toc-sheet {
+    inset: auto 16px 76px 16px;
+    width: auto;
+    max-width: 420px;
+    margin: 0;
+    padding: 16px 20px 8px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter Tight", sans-serif;
+  }
+  .toc-sheet::backdrop {
+    background: rgb(11 11 11 / 0.2);
+  }
+  .toc-sheet-title {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .toc-sheet ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .toc-sheet li {
+    border-top: 1px solid var(--hair);
+  }
+  .toc-sheet a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 0;
+    text-decoration: none;
+    color: inherit;
+  }
+  .toc-sheet .toc-label {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .toc-sheet a[aria-current] .toc-label {
+    color: var(--red);
+  }
+
+  .swiss .wide {
+    grid-column: 4 / -1;
+  }
+
+  .swiss .map {
+    height: clamp(320px, 50vw, 560px);
+    background: #e9e7e1;
+  }
+  .swiss .mapboxgl-popup-content {
+    border-radius: 0;
+    font-family: inherit;
+    box-shadow: none;
+    border: 1.5px solid var(--ink);
+  }
+
+  .swiss .charts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px var(--gutter);
+  }
+  .swiss .chart {
+    margin: 0;
+  }
+  .swiss .chart figcaption {
+    font-size: 14px;
+    font-weight: 700;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .swiss .chart ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .swiss .chart li {
+    display: grid;
+    grid-template-columns: 96px 1fr 28px;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--hair);
+    font-size: 14px;
+  }
+  .swiss .bar-track {
+    height: 10px;
+  }
+  .swiss .bar {
+    display: block;
+    height: 100%;
+    background: var(--ink);
+  }
+  .swiss .chart .bar.top {
+    background: var(--red);
+  }
+  .swiss .bar-value {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .swiss .coverage {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px var(--gutter);
+  }
+  .swiss .country h3 {
+    margin: 0 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--ink);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .swiss .cov-row {
+    display: grid;
+    grid-template-columns: 48px 1fr 56px;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+  .swiss .cov-track {
+    height: 6px;
+    background: var(--hair);
+  }
+  .swiss .cov-bar {
+    display: block;
+    height: 100%;
+    background: var(--red);
+  }
+  .swiss .cov-num {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .swiss .table-wrap {
+    overflow-x: auto;
+  }
+  .swiss table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .swiss th {
+    text-align: left;
+    padding: 0 12px 8px 0;
+    border-bottom: 1px solid var(--ink);
+    white-space: nowrap;
+  }
+  .swiss th button {
+    all: unset;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .swiss th button:focus-visible {
+    outline: 2px solid var(--red);
+  }
+  .swiss th[aria-sort] button {
+    color: var(--red);
+  }
+  .swiss th[aria-sort="descending"] button::after {
+    content: " ↓";
+  }
+  .swiss th[aria-sort="ascending"] button::after {
+    content: " ↑";
+  }
+  .swiss td {
+    padding: 9px 12px 9px 0;
+    border-bottom: 1px solid var(--hair);
+    vertical-align: middle;
+  }
+  .swiss td a {
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .swiss td a:hover {
+    color: var(--red);
+  }
+  .swiss td.num {
+    font-variant-numeric: tabular-nums;
+  }
+  .swiss .date-year {
+    display: none;
+  }
+  .swiss tbody tr:hover {
+    background: #efede7;
+  }
+
+  @media (max-width: 900px) {
+    .swiss .wide {
+      grid-column: 1 / -1;
+    }
+    .swiss .stats-row {
+      row-gap: 32px;
+    }
+    .swiss .metric {
+      grid-column: span 6;
+    }
+    .swiss .charts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .swiss .hide-sm,
+    .swiss .date-full {
+      display: none;
+    }
+    .swiss .date-year {
+      display: inline;
+    }
   }
 </style>

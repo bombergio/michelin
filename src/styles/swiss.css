@@ -1,0 +1,202 @@
+/* Shared Swiss layout: tokens, 12-col grid, top bar, hero, sections, stat columns, footer. */
+
+html {
+  background: #f7f6f2;
+}
+
+.swiss {
+  --ink: #0b0b0b;
+  --paper: #f7f6f2;
+  --red: #bd2333;
+  --muted: #6d6b66;
+  --rule: #0b0b0b;
+  /* structural rules: quiet section dividers only */
+  --rule-section: 1px solid var(--hair);
+  --hair: #d9d6cf;
+  --gutter: clamp(16px, 3vw, 40px);
+  --section-gap: clamp(40px, 6vw, 80px);
+  --hero-gap: clamp(48px, 8vw, 112px);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-figures: "Geist", "Inter Tight", sans-serif;
+  font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: 16px;
+  line-height: 1.45;
+  padding: 0 var(--gutter) 96px;
+  max-width: 1440px;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+}
+.swiss a {
+  color: inherit;
+}
+.swiss a:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+.swiss .g12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+.swiss .red {
+  color: var(--red);
+}
+.swiss .muted {
+  color: var(--muted);
+}
+.swiss .tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* top bar */
+.swiss .topbar {
+  align-items: baseline;
+  padding: 20px 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.swiss .topbar nav {
+  grid-column: 9 / -1;
+  display: flex;
+  gap: 28px;
+  justify-content: flex-end;
+}
+/* tabs: thin line under both, red bar under the current page */
+.swiss .topbar nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: inset 0 -1px 0 var(--hair);
+  transition: box-shadow 0.2s;
+}
+.swiss .topbar nav a[aria-current="page"] {
+  box-shadow: inset 0 -3px 0 var(--red);
+}
+.swiss .topbar nav a:not([aria-current]):hover {
+  box-shadow: inset 0 -3px 0 var(--ink);
+}
+
+/* hero */
+/* equal space above and below, measured from cap height and baseline (not the line box) */
+.swiss .hero {
+  align-items: start;
+  padding: var(--hero-gap) 0;
+}
+.swiss .eyebrow,
+.swiss h1 {
+  text-box: trim-both cap alphabetic;
+}
+.swiss .eyebrow {
+  grid-column: 1 / span 3;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.swiss h1 {
+  grid-column: 4 / -1;
+  margin: 0;
+  font-size: clamp(2.6rem, 8.2vw, 8.5rem);
+  line-height: 0.92;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+/* stat columns: separated by the gutter and whitespace alone */
+.swiss .stat {
+  display: grid;
+  align-content: start;
+}
+.swiss .stat .big {
+  font-family: var(--font-figures);
+  font-weight: 300;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.swiss .stat .label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* sections */
+.swiss .block {
+  border-top: var(--rule-section);
+  padding-top: 16px;
+  margin-top: 64px;
+}
+.swiss .stats-row + .block {
+  margin-top: var(--section-gap);
+}
+.swiss .section-label {
+  grid-column: 1 / span 3;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* footer */
+.swiss .foot {
+  margin-top: 64px;
+  padding-top: 14px;
+  border-top: var(--rule-section);
+  font-size: 14px;
+  font-weight: 600;
+}
+.swiss .foot a {
+  grid-column: 7 / -1;
+  justify-self: end;
+  text-decoration: none;
+}
+
+.swiss .icon-arrow {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.25em;
+  vertical-align: 0.05em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swiss * {
+    transition: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .swiss .eyebrow,
+  .swiss h1,
+  .swiss .section-label {
+    grid-column: 1 / -1;
+  }
+  .swiss .eyebrow {
+    padding: 0 0 16px;
+  }
+  .swiss .section-label {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* full-width tabs; tighter space between them and the headline */
+  .swiss .topbar {
+    padding: 8px 0 0;
+  }
+  .swiss .topbar nav {
+    grid-column: 1 / -1;
+    gap: 0;
+  }
+  .swiss .topbar nav a {
+    flex: 1;
+    justify-content: center;
+  }
+  .swiss .hero {
+    padding-top: 42px;
+  }
+}
+
+

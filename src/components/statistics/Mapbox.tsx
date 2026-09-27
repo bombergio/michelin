@@ -6,14 +6,22 @@ import { starsToIcon } from "../../components/common/Helpers"
 
 mapboxgl.accessToken = import.meta.env.PUBLIC_MAPKEY_TOKEN
 
-export default function Mapbox({ places }: { places: Place[] }) {
+export default function Mapbox({
+  places,
+  mapStyle = "mapbox://styles/mapbox/outdoors-v11",
+  markerColor = "#bd2333",
+}: {
+  places: Place[]
+  mapStyle?: string
+  markerColor?: string
+}) {
   const lons: number[] = places.map((r) => r.fields.Lon)
   const lats: number[] = places.map((r) => r.fields.Lat)
 
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: "map",
-      style: "mapbox://styles/mapbox/outdoors-v11",
+      style: mapStyle,
       bounds: [
         Math.min(...lons) - 2,
         Math.min(...lats) - 1,
@@ -49,7 +57,7 @@ export default function Mapbox({ places }: { places: Place[] }) {
       )
 
       new mapboxgl.Marker({
-        color: "#C22B33",
+        color: markerColor,
       })
         .setLngLat([place.fields.Lon, place.fields.Lat])
         .setPopup(popup)

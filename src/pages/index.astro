@@ -1,91 +1,333 @@
 ---
+import slug from "slug"
 import Layout from "../layouts/Layout.astro"
-import Card from "../components/Card.astro"
-import CardUpcoming from "../components/CardUpcoming.astro"
-import Stats from "../components/Stats.astro"
-import { listPlaces } from "../../utils/places"
-import { counting } from "radash"
-import type { Place, Fields } from "../components/common/Types"
+import Flower from "../components/Flower.astro"
+import Rating from "../components/Rating.astro"
+import ArrowIcon from "../components/ArrowIcon.astro"
+import { Swiper } from "../components/Swiper"
+import { indexData } from "../../utils/stats"
 
-const places: Place[] = await listPlaces()
-const notVisitedPlaces: Place[] = await listPlaces(false)
-const allStarsArray = places.map((r) => r.fields.Stars)
-const groupByStars = counting(allStarsArray, Math.floor)
+const { visited, upcoming, starCounts, totalStars, countryCount } =
+  await indexData()
+const pad = (n: number) => String(n).padStart(3, "0")
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+const starWords = ["One star", "Two stars", "Three stars"]
+// Flower sizes: [hero counts, entry, upcoming]
+const flowerSize = ["clamp(1.3rem, 3vw, 2.25rem)", "clamp(1.25rem, 2vw, 1.6rem)", "1.2rem"]
 ---
 
 <Layout
   title="Our Michelin-starred restaurant journey"
-  description="A list of the best restaurants in various countries we have visited and rated.\
-  The restaurants highlighted have received 1 star, 2 stars and 3 stars respectively from Michelin."
+  description="A list of the Michelin-starred restaurants we have visited and rated."
 >
-  <main>
-    <h1 class="text-center text-4xl sm:text-6xl xl:mt-20">
-      Michelin-starred restaurants we have visited so far
-    </h1>
-    <div class="row">
-      <Stats
-        stars={[groupByStars["1"], groupByStars["2"], groupByStars["3"]]}
-      />
-    </div>
-    <div class="row divide-y-2 divide-red-accent-300">
-      <div
-        class="flex flex-col px-4 lg:mx-auto sm:max-w-full md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 py-6 lg:py-10 mb-6"
-      >
-        <a
-          href="/statistics"
-          class="inline-flex items-center self-center text-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-        >
-          Some fancy statistics
-        </a>
-      </div>
+  <div class="swiss">
+    <header class="topbar g12">
+      <nav>
+        <a href="/" aria-current="page">Index</a>
+        <a href="/statistics">Statistics</a>
+      </nav>
+    </header>
+
+    <section class="hero g12">
+      <p class="eyebrow">Restaurants visited, rated, remembered</p>
+      <h1>
+        {visited.length} restaurants.<br />
+        <span class="red">{totalStars} stars.</span><br />
+        {countryCount} countries.
+      </h1>
+    </section>
+
+    <section class="stats-row g12" aria-label="Restaurants by stars">
       {
-        notVisitedPlaces.length > 0 && (
-          <div class="text-center">
-            <h2 class="my-5 text-3xl font-bold">Upcoming bookings</h2>
-            {notVisitedPlaces.map((place: { fields: Fields }) => {
-              return <CardUpcoming place={place.fields} />
-            })}
+        starCounts.map((count, i) => (
+          <div class="stat count">
+            <Flower count={i + 1} size={flowerSize[0]} class="red" />
+            <span class="big">{count}</span>
+            <span class="label">{starWords[i]}</span>
           </div>
-        )
+        ))
       }
-      <div>
+    </section>
+
+    {
+      upcoming.length > 0 && (
+        <section class="block g12">
+          <h2 class="section-label">Upcoming</h2>
+          <ul class="upcoming">
+            {upcoming.map(({ fields }) => (
+              <li>
+                <span class="name">{fields.Name}</span>
+                <Flower count={fields.Stars} size={flowerSize[2]} class="red" />
+                <span class="muted">
+                  {fields.Location}, {fields.Country}
+                </span>
+                <span class="muted tabular">{formatDate(fields.Date)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="block g12">
+      <h2 class="section-label">Index<span class="muted"> / newest first</span></h2>
+      <ol class="entries">
         {
-          places.reverse().map((place: { fields: Fields }) => {
-            return <Card place={place.fields} />
-          })
+          visited.map(({ fields }, i) => (
+            <li class="entry" id={slug(fields.Name)}>
+              <div class="num tabular">{pad(visited.length - i)}</div>
+              <div class="text">
+                <h3>
+                  <a href={`#${slug(fields.Name)}`}>{fields.Name}</a>
+                </h3>
+                <Flower count={fields.Stars} size={flowerSize[1]} class="red entry-stars" />
+                <p class="headline">{fields.Headline}</p>
+                <dl class="facts">
+                  <div>
+                    <dt>Date</dt>
+                    <dd class="tabular">{formatDate(fields.Date)}</dd>
+                  </div>
+                  <div>
+                    <dt>Place</dt>
+                    <dd>
+                      {fields.Location}, {fields.Country}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Per person</dt>
+                    <dd class="tabular">
+                      €{fields.Price + fields.PriceWinePairing}
+                      {fields.PriceWinePairing > 0 && (
+                        <span class="muted">
+                          {" "}
+                          ({fields.Price} + {fields.PriceWinePairing} wine pairing)
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Google</dt>
+                    <dd class="tabular">{fields.GoogleRating.toFixed(1)}</dd>
+                  </div>
+                  <div>
+                    <dt>Food</dt>
+                    <dd>
+                      <Rating value={fields.Food} />
+                    </dd>
+                  </div>
+                  {fields.WinePairing > 0 && (
+                    <div>
+                      <dt>Wine</dt>
+                      <dd>
+                        <Rating value={fields.WinePairing} />
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+                <a class="ext" href={fields.URL} target="_blank" rel="noopener">
+                  Website
+                  <ArrowIcon />
+                </a>
+              </div>
+              <div class="photos">
+                {fields.Images > 0 && (
+                  <Swiper images={fields.Images} restaurantId={fields.Id} client:visible />
+                )}
+              </div>
+            </li>
+          ))
         }
-      </div>
-    </div>
-  </main>
+      </ol>
+    </section>
+
+    <footer class="g12 foot">
+      <a href="/statistics">Statistics →</a>
+    </footer>
+  </div>
 </Layout>
 
-<style>
-  h1 {
-    margin: 2rem 0;
+<script>
+  // Marks entries as they scroll into view; CSS decides what (if anything) animates.
+  const root = document.querySelector<HTMLElement>(".swiss")
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  if (root && !reduce && "IntersectionObserver" in window) {
+    root.classList.add("js-reveal")
+    const io = new IntersectionObserver(
+      (items) => {
+        for (const item of items) {
+          if (item.isIntersecting) {
+            item.target.classList.add("in")
+            io.unobserve(item.target)
+          }
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    )
+    root.querySelectorAll(".entry").forEach((el) => io.observe(el))
+  }
+</script>
+
+<style is:global>
+  /* star counts */
+  .swiss .count {
+    grid-column: span 4;
+  }
+  .swiss .count .flowers {
+    margin-top: 4px;
+  }
+  .swiss .count .big {
+    font-size: clamp(3.25rem, 11vw, 10rem);
+    letter-spacing: -0.04em;
+    margin: 16px 0 4px;
   }
 
-  :global(html) {
-    scroll-behavior: smooth;
+  .swiss .section-label {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+  .swiss .upcoming,
+  .swiss .entries {
+    grid-column: 4 / -1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .swiss .upcoming li {
+    display: grid;
+    grid-template-columns: 2fr auto 2fr 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .swiss .upcoming .name {
+    font-weight: 700;
+  }
+
+  /* entries */
+  .swiss .entry {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr) minmax(0, 1.15fr);
+    column-gap: var(--gutter);
+    padding: 0 0 56px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--hair);
+    scroll-margin-top: 24px;
+  }
+  .swiss .entry:target h3 a {
+    background: var(--red);
+    color: #fff;
+  }
+  .swiss .num {
+    font-family: var(--font-figures);
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--red);
+  }
+  .swiss .entry h3 {
+    margin: 0 0 10px;
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+  .swiss .entry h3 a {
+    text-decoration: none;
+  }
+  .swiss .entry-stars {
+    margin-top: 4px;
+  }
+  .swiss .headline {
+    margin: 16px 0 24px;
+    max-width: 34ch;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+  .swiss .facts {
+    margin: 0 0 20px;
+    border-top: 1px solid var(--ink);
+    font-size: 14px;
+  }
+  .swiss .facts > div {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    align-items: center;
+    min-height: 36px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .swiss .facts dt {
+    color: var(--muted);
+  }
+  .swiss .facts dd {
+    margin: 0;
+    font-weight: 500;
+  }
+  .swiss .ext {
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1.5px solid currentColor;
+  }
+  .swiss .ext:hover {
+    color: var(--red);
+  }
+
+  /* photos (LightGallery thumbnails): neutralise Swiper's Tailwind styling,
+     then zoom inside a fixed frame — scale up, clip back to the original box */
+  .swiss .photos .lg-react-element {
+    gap: 8px;
+  }
+  .swiss .photos img {
+    border-radius: 0;
+    box-shadow: none;
+    scale: none;
+    clip-path: inset(0);
+    filter: saturate(0.85);
+    transition:
+      transform 0.7s var(--ease-out),
+      clip-path 0.7s var(--ease-out),
+      filter 0.4s;
+  }
+  .swiss .photos img:hover {
+    transform: scale(1.08);
+    clip-path: inset(3.7%);
+    filter: saturate(1.05);
   }
   @media (prefers-reduced-motion: reduce) {
-    :global(html) {
-      scroll-behavior: auto;
+    .swiss .photos img:hover {
+      transform: none;
+      clip-path: inset(0);
     }
   }
 
-  main {
-    margin: auto;
-    padding: 1em;
-    max-width: 120ch;
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      background-position-y: 0%;
+  @media (max-width: 900px) {
+    .swiss .upcoming,
+    .swiss .entries {
+      grid-column: 1 / -1;
     }
-    50% {
-      background-position-y: 80%;
+    .swiss .section-label {
+      position: static;
+    }
+    .swiss .entry {
+      grid-template-columns: 56px minmax(0, 1fr);
+      row-gap: 24px;
+    }
+    .swiss .photos {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 600px) {
+    .swiss .upcoming li {
+      grid-template-columns: 1fr auto;
+    }
+    .swiss .entry {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 16px;
     }
   }
 </style>
